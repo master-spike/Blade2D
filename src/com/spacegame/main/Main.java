@@ -30,7 +30,7 @@ public class Main extends GameCore {
 		super.draw_elems.clear();
 		
 		for (AbstractCharacter character: mCharacters) {
-			super.draw_elems.add(character.getShape());
+			super.draw_elems.addAll(character.getShape());
 		}
 		
 		
