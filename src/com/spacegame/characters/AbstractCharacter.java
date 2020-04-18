@@ -19,9 +19,20 @@ public abstract class AbstractCharacter {
 		mShapes.add(new TriElem(x, y, x-size/3, y-size, x+size/3, y-size, 1f, 1f, 1f, 1f, 0));
 		mPlayer = false;
 	}
+	protected boolean hidden;
 	
 	public ArrayList<AbstractDrawElem> getShape() {
 		return mShapes;
+	}
+	
+	public void hide() {
+		hidden = true;
+	}
+	public void show() {
+		hidden = true;
+	}
+	public boolean isHidden() {
+		return hidden;
 	}
 
 }

@@ -19,7 +19,6 @@ public class Main extends GameCore {
 		super(w, h, t, r);
 	}
 
-	@Override
 	protected void init() {
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
@@ -32,22 +31,19 @@ public class Main extends GameCore {
 		}
 	}
 
-	@Override
 	protected boolean toTerminate() {
 		return super.window.shouldClose();
 	}
 
-	@Override
 	protected void update() {
 		super.draw_elems.clear();
 		
 		for (AbstractCharacter character: mCharacters) {
-			super.draw_elems.addAll(character.getShape());
+			if(!character.isHidden()) super.draw_elems.addAll(character.getShape());
 		}
 		for (Star star: mStars) {
 			super.draw_elems.add(star.getShape());
 		}
-		
 		
 	}
 
