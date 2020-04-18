@@ -68,8 +68,8 @@ public class Main extends GameCore {
 		boolean[] keys = window.input.getKeys();
 		if (keys[GLFW.GLFW_KEY_W]) player.addFowardImpulse( 1);
 		if (keys[GLFW.GLFW_KEY_S]) player.addFowardImpulse(-1);
-		if (keys[GLFW.GLFW_KEY_D]) player.addSpin( 1);
-		if (keys[GLFW.GLFW_KEY_A]) player.addSpin(-1);
+		if (keys[GLFW.GLFW_KEY_A]) player.addSpin( 1);
+		if (keys[GLFW.GLFW_KEY_D]) player.addSpin(-1);
 		
 	}
 	
