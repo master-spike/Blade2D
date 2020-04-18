@@ -30,7 +30,7 @@ public class Main extends GameCore {
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
 		
-		player = new Najeeb(GameWidth/2, GameHeight/2, 40);
+		player = new Najeeb(GameWidth/2, GameHeight/2, 40, GameWidth, GameHeight);
 		mCharacters.add(player);
 		
 		int numStars = 100;
@@ -66,10 +66,10 @@ public class Main extends GameCore {
 		// Control player
 		
 		boolean[] keys = window.input.getKeys();
-		if (keys[GLFW.GLFW_KEY_W]) player.addEngineDirection( 0,  1);
-		if (keys[GLFW.GLFW_KEY_S]) player.addEngineDirection( 0, -1);
-		if (keys[GLFW.GLFW_KEY_D]) player.addEngineDirection( 1,  0);
-		if (keys[GLFW.GLFW_KEY_A]) player.addEngineDirection(-1,  0);
+		if (keys[GLFW.GLFW_KEY_W]) player.addFowardImpulse( 1);
+		if (keys[GLFW.GLFW_KEY_S]) player.addFowardImpulse(-1);
+		if (keys[GLFW.GLFW_KEY_D]) player.addSpin( 1);
+		if (keys[GLFW.GLFW_KEY_A]) player.addSpin(-1);
 		
 	}
 	
