@@ -2,7 +2,7 @@ package com.blade2d.drawelements;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class LineElem extends AbstractDrawElem{
+public class LineElem extends AbstractDrawElem {
 	
 	private int x1;
 	private int y1;
@@ -12,7 +12,6 @@ public class LineElem extends AbstractDrawElem{
 	private float g;
 	private float b;
 	private float a;
-	
 	public LineElem(int x1, int y1, int x2, int y2, float r, float g, float b, float a, int l) {
 		super(l);
 		this.x1 = x1;
