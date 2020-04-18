@@ -3,7 +3,6 @@ package com.spacegame.characters;
 import java.util.ArrayList;
 
 import com.blade2d.drawelements.AbstractDrawElem;
-import com.blade2d.drawelements.LineElem;
 import com.blade2d.drawelements.TriElem;
 import com.blade2d.drawelements.Vertex;
 
