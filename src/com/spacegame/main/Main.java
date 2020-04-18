@@ -1,7 +1,8 @@
 package com.spacegame.main;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
+
+import org.lwjgl.glfw.GLFW;
 
 import com.blade2d.drawelements.AbstractDrawElem;
 import com.blade2d.drawelements.LineElem;
@@ -12,6 +13,10 @@ import com.spacegame.characters.Najeeb;
 public class Main extends GameCore {
 	
 	private ArrayList<AbstractCharacter> mCharacters;
+	private AbstractCharacter player;
+	private SideBar mSideBar;
+	
+	public int GameWidth, GameHeight, SideBarWidth;
 	
 	private ArrayList<Star> mStars;
 
@@ -20,14 +25,17 @@ public class Main extends GameCore {
 	}
 
 	protected void init() {
+		mSideBar = new SideBar(GameWidth, 0, SideBarWidth, GameHeight);
+		
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
 		
-		mCharacters.add(new Najeeb(super.resHeight/2, super.resHeight/2, 40));
+		player = new Najeeb(GameWidth/2, GameHeight/2, 40);
+		mCharacters.add(player);
 		
 		int numStars = 100;
 		for (int i = 0; i != numStars; i++) {
-			mStars.add(new Star((int) (Math.random() * 768), (int) (Math.random() * 768)));
+			mStars.add(new Star((int) (Math.random() * GameWidth), (int) (Math.random() * GameHeight)));
 		}
 	}
 
@@ -36,6 +44,9 @@ public class Main extends GameCore {
 	}
 
 	protected void update() {
+		
+		// Do drawing
+		
 		super.draw_elems.clear();
 		
 		for (AbstractCharacter character: mCharacters) {
@@ -44,6 +55,21 @@ public class Main extends GameCore {
 		for (Star star: mStars) {
 			super.draw_elems.add(star.getShape());
 		}
+		super.draw_elems.addAll(mSideBar.getShapes());
+		
+		// Get game objects to update 
+		
+		for (AbstractCharacter character: mCharacters) {
+			character.update();
+		}
+		
+		// Control player
+		
+		boolean[] keys = window.input.getKeys();
+		if (keys[GLFW.GLFW_KEY_W]) player.addEngineDirection( 0,  1);
+		if (keys[GLFW.GLFW_KEY_S]) player.addEngineDirection( 0, -1);
+		if (keys[GLFW.GLFW_KEY_D]) player.addEngineDirection( 1,  0);
+		if (keys[GLFW.GLFW_KEY_A]) player.addEngineDirection(-1,  0);
 		
 	}
 	
