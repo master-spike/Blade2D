@@ -22,7 +22,7 @@ public abstract class AbstractCharacter {
 	protected boolean hidden;
 	
 	public AbstractCharacter() {
-		mShape = new ArrayList<AbstractDrawElem>();
+		mShapes = new ArrayList<AbstractDrawElem>();
 	}
 	
 	public ArrayList<AbstractDrawElem> getShape() {
