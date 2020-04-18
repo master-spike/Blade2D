@@ -14,25 +14,21 @@ public class Main extends GameCore {
 		super(w, h, t, r);
 	}
 
-	@Override
 	protected void init() {
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mCharacters.add(new Najeeb(super.resWidth/2, super.resHeight/2, 100));
 	}
 
-	@Override
 	protected boolean toTerminate() {
 		return super.window.shouldClose();
 	}
 
-	@Override
 	protected void update() {
 		super.draw_elems.clear();
 		
 		for (AbstractCharacter character: mCharacters) {
-			super.draw_elems.addAll(character.getShape());
+			if(!character.isHidden()) super.draw_elems.addAll(character.getShape());
 		}
-		
 		
 	}
 
