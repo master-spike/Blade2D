@@ -4,10 +4,10 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class LineElem extends AbstractDrawElem {
 	
-	private int x1;
-	private int y1;
-	private int x2;
-	private int y2;
+	private float x1;
+	private float y1;
+	private float x2;
+	private float y2;
 	private float r;
 	private float g;
 	private float b;
@@ -24,35 +24,35 @@ public class LineElem extends AbstractDrawElem {
 		this.a = a;
 	}
 	
-	public int getX1() {
+	public float getX1() {
 		return x1;
 	}
 
-	public void setX1(int x1) {
+	public void setX1(float x1) {
 		this.x1 = x1;
 	}
 
-	public int getY1() {
+	public float getY1() {
 		return y1;
 	}
 
-	public void setY1(int y1) {
+	public void setY1(float y1) {
 		this.y1 = y1;
 	}
 
-	public int getX2() {
+	public float getX2() {
 		return x2;
 	}
 
-	public void setX2(int x2) {
+	public void setX2(float x2) {
 		this.x2 = x2;
 	}
 
-	public int getY2() {
+	public float getY2() {
 		return y2;
 	}
 
-	public void setY2(int y2) {
+	public void setY2(float y2) {
 		this.y2 = y2;
 	}
 
@@ -94,6 +94,48 @@ public class LineElem extends AbstractDrawElem {
 		glVertex2f(x1, y1);
 		glVertex2f(x2, y2);
 		glEnd();
+	}
+
+	public void rotate(Vertex c, double angle) {
+		Vertex v = Transformations.rotate(new Vertex(x1, y1), c, angle);
+		x1 = v.x;
+		y1 = v.y;
+		v = Transformations.rotate(new Vertex(x2, y2), c, angle);
+		x2 = v.x;
+		y2 = v.y;
+		
+	}
+
+	@Override
+	public void translate(Vertex c) {
+		Vertex v = Transformations.translate(new Vertex(x1, y1), c);
+		x1 = v.x;
+		y1 = v.y;
+		v = Transformations.translate(new Vertex(x2, y2), c);
+		x2 = v.x;
+		y2 = v.y;
+	}
+
+	@Override
+	public void scale(Vertex c, float scale) {
+		Vertex v = Transformations.scale(new Vertex(x1, y1), c, scale);
+		x1 = v.x;
+		y1 = v.y;
+		v = Transformations.scale(new Vertex(x2, y2), c, scale);
+		x2 = v.x;
+		y2 = v.y;
+		
+	}
+
+	@Override
+	public void reflect(Vertex c, double angle) {
+		Vertex v = Transformations.reflect(new Vertex(x1, y1), c, angle);
+		x1 = v.x;
+		y1 = v.y;
+		v = Transformations.reflect(new Vertex(x2, y2), c, angle);
+		x2 = v.x;
+		y2 = v.y;
+		
 	}
 
 	

@@ -5,62 +5,57 @@ import static org.lwjgl.opengl.GL11.*;
 public class TriElem extends AbstractDrawElem{
 	
 	
-	private int x1;
-	private int y1;
-	private int x2;
-	private int y2;
-	private int x3;
-	private int y3;
+	private float x1, y1, x2, y2, x3, y3;
 	private float r;
 	private float g;
 	private float b;
 	private float a;
 	
-	public int getX1() {
+	public float getX1() {
 		return x1;
 	}
 
-	public void setX1(int x1) {
+	public void setX1(float x1) {
 		this.x1 = x1;
 	}
 
-	public int getY1() {
+	public float getY1() {
 		return y1;
 	}
 
-	public void setY1(int y1) {
+	public void setY1(float y1) {
 		this.y1 = y1;
 	}
 
-	public int getX2() {
+	public float getX2() {
 		return x2;
 	}
 
-	public void setX2(int x2) {
+	public void setX2(float x2) {
 		this.x2 = x2;
 	}
 
-	public int getY2() {
+	public float getY2() {
 		return y2;
 	}
 
-	public void setY2(int y2) {
+	public void setY2(float y2) {
 		this.y2 = y2;
 	}
 
-	public int getX3() {
+	public float getX3() {
 		return x3;
 	}
 
-	public void setX3(int x3) {
+	public void setX3(float x3) {
 		this.x3 = x3;
 	}
 
-	public int getY3() {
+	public float getY3() {
 		return y3;
 	}
 
-	public void setY3(int y3) {
+	public void setY3(float y3) {
 		this.y3 = y3;
 	}
 
@@ -117,6 +112,60 @@ public class TriElem extends AbstractDrawElem{
 		glVertex2f(x2, y2);
 		glVertex2f(x3, y3);
 		glEnd();
+	}
+
+	public void rotate(Vertex c, double angle) {
+		Vertex v = Transformations.rotate(new Vertex(x1, y1), c, angle);
+		x1 = v.x;
+		y1 = v.y;
+		v = Transformations.rotate(new Vertex(x2, y2), c, angle);
+		x2 = v.x;
+		y2 = v.y;
+		v = Transformations.rotate(new Vertex(x3, y3), c, angle);
+		x3 = v.x;
+		y3 = v.y;
+		
+	}
+
+	@Override
+	public void translate(Vertex c) {
+		Vertex v = Transformations.translate(new Vertex(x1, y1), c);
+		x1 = v.x;
+		y1 = v.y;
+		v = Transformations.translate(new Vertex(x2, y2), c);
+		x2 = v.x;
+		y2 = v.y;
+		v = Transformations.translate(new Vertex(x3, y3), c);
+		x3 = v.x;
+		y3 = v.y;
+	}
+
+	@Override
+	public void scale(Vertex c, float scale) {
+		Vertex v = Transformations.scale(new Vertex(x1, y1), c, scale);
+		x1 = v.x;
+		y1 = v.y;
+		v = Transformations.scale(new Vertex(x2, y2), c, scale);
+		x2 = v.x;
+		y2 = v.y;
+		v = Transformations.scale(new Vertex(x3, y3), c, scale);
+		x3 = v.x;
+		y3 = v.y;
+		
+	}
+
+	@Override
+	public void reflect(Vertex c, double angle) {
+		Vertex v = Transformations.reflect(new Vertex(x1, y1), c, angle);
+		x1 = v.x;
+		y1 = v.y;
+		v = Transformations.reflect(new Vertex(x2, y2), c, angle);
+		x2 = v.x;
+		y2 = v.y;
+		v = Transformations.reflect(new Vertex(x3, y3), c, angle);
+		x3 = v.x;
+		y3 = v.y;
+		
 	}
 	
 }

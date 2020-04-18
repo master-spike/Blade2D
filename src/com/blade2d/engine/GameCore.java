@@ -23,14 +23,14 @@ public abstract class GameCore {
 		window.create();
 		window.initOpenGl();
 		init();
-		long start_time = System.nanoTime();
-		int frames = 1;
+		long last_time = System.nanoTime();
+		long one_bill = 1000000000;
 		while(!toTerminate()) {
 			updateWindow();
 			update();
 			render();
-			while(System.nanoTime() - start_time < (frames*1000000)/update_rate);
-			frames += 1;
+			while(System.nanoTime() - last_time < one_bill/update_rate);
+			last_time = System.nanoTime();
 		}
 		terminate();
 		
