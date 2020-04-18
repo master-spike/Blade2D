@@ -12,6 +12,10 @@ public abstract class AbstractCharacter {
 	
 	protected ArrayList<AbstractDrawElem> mShape; // Shape is a set of Draw Elements
 	
+	public AbstractCharacter() {
+		mShape = new ArrayList<AbstractDrawElem>();
+	}
+	
 	public ArrayList<AbstractDrawElem> getShape() {
 		return mShape;
 	}

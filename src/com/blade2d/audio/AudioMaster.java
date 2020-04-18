@@ -30,7 +30,6 @@ public class AudioMaster {
 		alcCapabilities = ALC.createCapabilities(device);
 		alCapabilities = AL.createCapabilities(alcCapabilities);
 
-
 	}
 	
 	public void playSound() {
