@@ -18,6 +18,8 @@ public class Najeeb extends AbstractCharacter {
 		mSpinImpulse = 0.0005f;
 		mWrapWidth = ww;
 		mWrapHeight = wh;
+		mSpinSlowFactor = 0.99f;
+		mMoveSlowFactor = 0.99f;
 	}
 	
 	public void update() {
@@ -36,27 +38,27 @@ public class Najeeb extends AbstractCharacter {
 		TriElem e = new TriElem(mX, mY,
 				mX-mSize/3, mY-mSize,
 				mX+mSize/3, mY-mSize,
-				1f, 1f, 1f, 1f, -100);
+				1f, 1f, 1f, 1f, 2);
 		QuadElem q = new QuadElem(mX-mSize/2,mY-mSize/2,
 				mX-mSize/3, mY-mSize,
 				mX+mSize/3, mY-mSize,
 				mX+mSize/2, mY-mSize/2,
-				0.7f, 0.7f, 0.7f, 1f, -101);
+				0.7f, 0.7f, 0.7f, 1f, 1);
 		QuadElem q1 = new QuadElem(mX-mSize/8, mY-mSize*0.6f,
 				mX+mSize/8, mY-mSize*0.6f,
 				mX+mSize/3, mY-mSize,
 				mX-mSize/3, mY-mSize,
-				0.0f, 0.8f, 1f, 1f, -99);
+				0.0f, 0.8f, 1f, 1f, 3);
 
 		LineElem l1 = new LineElem(mX-mSize/8, mY-mSize*0.6f,
 				mX+mSize/8, mY-mSize*0.6f,
-				0f,0f,0f,1f, -98);
+				0f,0f,0f,1f, 4);
 		LineElem l2 = new LineElem(mX+mSize/8, mY-mSize*0.6f,
 				mX+mSize/3, mY-mSize,
-				0f,0f,0f,1f, -98);
+				0f,0f,0f,1f, 4);
 		LineElem l3 = new LineElem(mX-mSize/8, mY-mSize*0.6f,
 				mX-mSize/3, mY-mSize,
-				0f,0f,0f,1f, -98);
+				0f,0f,0f,1f, 4);
 		
 		mShapes.add(l1);
 		mShapes.add(l2);
