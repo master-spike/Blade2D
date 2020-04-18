@@ -24,9 +24,8 @@ public class Najeeb extends AbstractCharacter {
 		
 		mX %= mWrapWidth;
 		mY %= mWrapHeight;
-
 		while (mX < 0) mX += mWrapWidth;
-		while (mY < 0) mX += mWrapHeight;
+		while (mY < 0) mY += mWrapHeight;
 		
 		// Drawing stuff
 		mShapes.clear();
