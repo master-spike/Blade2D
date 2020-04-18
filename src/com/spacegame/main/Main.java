@@ -30,7 +30,7 @@ public class Main extends GameCore {
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
 		
-		player = new Najeeb(GameWidth/2, GameHeight/2, 40, GameWidth, GameHeight);
+		player = new Najeeb(GameWidth/2, GameHeight/2, 60, GameWidth, GameHeight);
 		mCharacters.add(player);
 		
 		int numStars = 100;

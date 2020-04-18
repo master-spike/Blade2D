@@ -12,7 +12,7 @@ public class LineElem extends AbstractDrawElem {
 	private float g;
 	private float b;
 	private float a;
-	public LineElem(int x1, int y1, int x2, int y2, float r, float g, float b, float a, int l) {
+	public LineElem(float x1, float y1, float x2, float y2, float r, float g, float b, float a, int l) {
 		super(l);
 		this.x1 = x1;
 		this.y1 = y1;

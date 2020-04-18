@@ -6,7 +6,7 @@ import com.blade2d.drawelements.AbstractDrawElem;
 
 public abstract class AbstractCharacter {
 	
-	protected int mSize;
+	protected float mSize;
 	protected float mRotation;
 	
 	protected float mX, mY;

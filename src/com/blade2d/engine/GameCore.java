@@ -1,5 +1,6 @@
 package com.blade2d.engine;
 
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 import com.blade2d.display.Window;
@@ -47,6 +48,7 @@ public abstract class GameCore {
 	protected abstract void update();
 	
 	protected void render() {
+		draw_elems.sort(null);;
 		for (AbstractDrawElem e : draw_elems) {
 			e.draw();
 		}
@@ -57,5 +59,5 @@ public abstract class GameCore {
 		window.destroy();
 	}
 	
-	protected PriorityQueue<AbstractDrawElem> draw_elems = new PriorityQueue<AbstractDrawElem>();
+	protected ArrayList<AbstractDrawElem> draw_elems = new ArrayList<AbstractDrawElem>();
 }

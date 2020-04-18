@@ -1,5 +1,8 @@
 package com.spacegame.characters;
 
+import com.blade2d.drawelements.AbstractDrawElem;
+import com.blade2d.drawelements.LineElem;
+import com.blade2d.drawelements.QuadElem;
 import com.blade2d.drawelements.TriElem;
 import com.blade2d.drawelements.Vertex;
 
@@ -27,11 +30,45 @@ public class Najeeb extends AbstractCharacter {
 		while (mX < 0) mX += mWrapWidth;
 		while (mY < 0) mY += mWrapHeight;
 		
+		Vertex centre = new Vertex(mX, mY-mSize/2);
 		// Drawing stuff
 		mShapes.clear();
-		TriElem e = new TriElem((int)mX, (int)mY, (int)(mX-mSize/3), (int)(mY-mSize), (int)(mX+mSize/3), (int)(mY-mSize), 1f, 1f, 1f, 1f, -1);
-		e.rotate(new Vertex(mX, mY), mRotation);
+		TriElem e = new TriElem(mX, mY,
+				mX-mSize/3, mY-mSize,
+				mX+mSize/3, mY-mSize,
+				1f, 1f, 1f, 1f, -100);
+		QuadElem q = new QuadElem(mX-mSize/2,mY-mSize/2,
+				mX-mSize/3, mY-mSize,
+				mX+mSize/3, mY-mSize,
+				mX+mSize/2, mY-mSize/2,
+				0.7f, 0.7f, 0.7f, 1f, -101);
+		QuadElem q1 = new QuadElem(mX-mSize/8, mY-mSize*0.6f,
+				mX+mSize/8, mY-mSize*0.6f,
+				mX+mSize/3, mY-mSize,
+				mX-mSize/3, mY-mSize,
+				0.0f, 0.8f, 1f, 1f, -99);
+
+		LineElem l1 = new LineElem(mX-mSize/8, mY-mSize*0.6f,
+				mX+mSize/8, mY-mSize*0.6f,
+				0f,0f,0f,1f, -98);
+		LineElem l2 = new LineElem(mX+mSize/8, mY-mSize*0.6f,
+				mX+mSize/3, mY-mSize,
+				0f,0f,0f,1f, -98);
+		LineElem l3 = new LineElem(mX-mSize/8, mY-mSize*0.6f,
+				mX-mSize/3, mY-mSize,
+				0f,0f,0f,1f, -98);
+		
+		mShapes.add(l1);
+		mShapes.add(l2);
+		mShapes.add(l3);
 		mShapes.add(e);
+		mShapes.add(q);
+		mShapes.add(q1);
+		
+		
+		for (AbstractDrawElem shape : mShapes) {
+			shape.rotate(centre, mRotation);
+		}
 		
 	}
 	

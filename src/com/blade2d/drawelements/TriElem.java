@@ -91,9 +91,9 @@ public class TriElem extends AbstractDrawElem{
 		this.a = a;
 	}
 
-	public TriElem(int x1, int y1, int x2, int y2, int x3, int y3,  float r, float g, float b, float a, int l) {
+	public TriElem(float mX, float y1, float x2, float y2, float x3, float y3,  float r, float g, float b, float a, int l) {
 		super(l);
-		this.x1 = x1;
+		this.x1 = mX;
 		this.y1 = y1;
 		this.x2 = x2;
 		this.y2 = y2;
