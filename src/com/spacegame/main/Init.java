@@ -4,7 +4,7 @@ public class Init {
 
 	public static void main(String[] args) {
 		
-		final int WIDTH = 1280, HEIGHT = 720;
+		final int WIDTH = 1024, HEIGHT = 768;
 		
 		Main game = new Main(WIDTH, HEIGHT, "Space Game", 60);
 		game.Start();

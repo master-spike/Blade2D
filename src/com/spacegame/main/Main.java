@@ -23,11 +23,11 @@ public class Main extends GameCore {
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
 		
-		mCharacters.add(new Najeeb(super.resWidth/2, super.resHeight/2, 40));
+		mCharacters.add(new Najeeb(super.resHeight/2, super.resHeight/2, 40));
 		
 		int numStars = 100;
 		for (int i = 0; i != numStars; i++) {
-			mStars.add(new Star((int) (Math.random() * super.resWidth), (int) (Math.random() * super.resHeight)));
+			mStars.add(new Star((int) (Math.random() * 768), (int) (Math.random() * 768)));
 		}
 	}
 
@@ -46,6 +46,8 @@ public class Main extends GameCore {
 		}
 		
 	}
+	
+	AbstractCharacter centered;
 }
 
 class Star {
