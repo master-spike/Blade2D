@@ -18,7 +18,7 @@ public abstract class GameCore {
 	
 	protected Window window;
 	
-	protected void Start() {
+	public void Start() {
 		window = new Window(resWidth, resHeight, window_title);
 		window.create();
 		window.initOpenGl();
