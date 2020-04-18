@@ -3,11 +3,8 @@ package com.spacegame.characters;
 import java.util.ArrayList;
 
 import com.blade2d.drawelements.AbstractDrawElem;
-import com.blade2d.drawelements.TriElem;
 
 public abstract class AbstractCharacter {
-	
-	public boolean mPlayer;
 	
 	protected int mSize;
 	
@@ -19,7 +16,6 @@ public abstract class AbstractCharacter {
 		mSize = size;
 		mMomentum = 0;
 		mShapes = new ArrayList<AbstractDrawElem>();
-		mPlayer = false;
 	}
 	protected boolean mHidden;
 	
