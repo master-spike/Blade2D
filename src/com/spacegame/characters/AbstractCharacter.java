@@ -11,28 +11,33 @@ public abstract class AbstractCharacter {
 	
 	protected int mSize;
 	
+	protected int mMomentum;
+	
 	protected ArrayList<AbstractDrawElem> mShapes; // Shape is a set of Draw Elements
 	
 	public AbstractCharacter(int x, int y, int size) {
 		mSize = size;
+		mMomentum = 0;
 		mShapes = new ArrayList<AbstractDrawElem>();
-		mShapes.add(new TriElem(x, y, x-size/3, y-size, x+size/3, y-size, 1f, 1f, 1f, 1f, 0));
 		mPlayer = false;
 	}
-	protected boolean hidden;
+	protected boolean mHidden;
 	
 	public ArrayList<AbstractDrawElem> getShape() {
-		return mShapes;
+		if (!mHidden)
+			return mShapes;
+		else
+			return new ArrayList<AbstractDrawElem>();
 	}
 	
 	public void hide() {
-		hidden = true;
+		mHidden = true;
 	}
 	public void show() {
-		hidden = true;
+		mHidden = true;
 	}
 	public boolean isHidden() {
-		return hidden;
+		return mHidden;
 	}
 
 }
