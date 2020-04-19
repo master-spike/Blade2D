@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.lwjgl.glfw.GLFW;
 
 import com.blade2d.drawelements.AbstractDrawElem;
-import com.blade2d.drawelements.LineElem;
+import com.blade2d.drawelements.QuadElem;
 import com.blade2d.engine.GameCore;
 import com.spacegame.characters.AbstractCharacter;
 import com.spacegame.characters.Earth;
@@ -27,10 +27,17 @@ public class Main extends GameCore {
 	ArrayList<AbstractGUIElem> guielems;
 	ArrayList<Timer> timers;
 	
+	// CONSTS
+	
 	public static final float GRAVITY_CONST = 10;
 	public static final float ASTEROID_MIN_SPAWN_HEIGHT = 200;
 	public static final float ASTEROID_MAX_SPAWN_HEIGHT = 300;
+	public static final float ASTEROID_SPAWN_CHANCE_PER_FRAME = 0.004f;
+	public static final int ASTEROID_SPAWN_WARNING_TIME = 120;
 	public static final int ASS_RADIUS = 10;
+	public static final int EARTH_RADIUS = 70;
+	public static final int NUM_STARS = 200;
+
 	
 	public int GameWidth, GameHeight, SideBarWidth;
 	
@@ -43,24 +50,21 @@ public class Main extends GameCore {
 	protected void init() {
 		mSideBar = new SideBar(GameWidth, 0, SideBarWidth, GameHeight);
 		
-		int earthRadius = 100;
-		
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
 		guielems = new ArrayList<AbstractGUIElem>();
 		timers = new ArrayList<Timer>();
 		
-		player = new Najeeb((int) (GameWidth /2 - earthRadius * 1.5),
-						    (int) (GameHeight/2 - earthRadius * 1.5), 
+		player = new Najeeb((int) (GameWidth /2 - EARTH_RADIUS * 2),
+						    (int) (GameHeight/2 - EARTH_RADIUS * 2), 
 						    20, GameWidth, GameHeight);
 		mCharacters.add(player);
 		
-		int numStars = 100;
-		for (int i = 0; i != numStars; i++) {
+		for (int i = 0; i != NUM_STARS; i++) {
 			mStars.add(new Star((int) (Math.random() * GameWidth), (int) (Math.random() * GameHeight)));
 		}
 		
-		earth = new Earth(GameWidth / 2, GameHeight / 2, earthRadius);
+		earth = new Earth(GameWidth / 2, GameHeight / 2, EARTH_RADIUS);
 		mCharacters.add(earth);
 	}
 
@@ -92,12 +96,14 @@ public class Main extends GameCore {
 		for (AbstractCharacter character: mCharacters) {
 			character.update();
 		}
+		for (Star s : mStars) {
+			s.update();
+		}
 		
 		
 		// Spawn asteroids
 		
-		float spawnChance = 0.002f;
-		if (Math.random() < spawnChance) {
+		if (Math.random() < ASTEROID_SPAWN_CHANCE_PER_FRAME) {
 			
 			
 			
@@ -112,7 +118,7 @@ public class Main extends GameCore {
 			events.add(ase);
 			guielems.add(aw);
 			events.add(new DeleteGUIElemEvent(this, aw));
-			Timer t = new Timer(120, events);
+			Timer t = new Timer(ASTEROID_SPAWN_WARNING_TIME, events);
 			timers.add(t);
 			
 		}
@@ -166,27 +172,37 @@ public class Main extends GameCore {
 }
 
 class Star {
-	private static final double chanceVisible = 0.5;
-	private static final int size = 5;
+	private static final float size = 3;
 	
 	public final int mX, mY;
-	@SuppressWarnings("unused")
-	private boolean mVisible;
 	
 	public Star (int x, int y) {
 		mX = x;
 		mY = y;
-		mVisible = Math.random() < chanceVisible;
+		brightness = (float)Math.random();
+	}
+	
+	private float brightness;
+	
+	public void update() {
+		double r = Math.random();
+		if (r < 0.5) {
+			brightness -= 0.1f;
+		}
+		else {
+			brightness += 0.2f;
+		}
+		if (brightness > 1f) brightness = 1f;
+		if (brightness < 0.4f) brightness = 0.5f;
 	}
 	
 	public AbstractDrawElem getShape() {
-		double angle = Math.random() * 2 * Math.PI;
-		int xDist = (int) (Math.cos(angle) * size);
-		int yDist = (int) (Math.sin(angle) * size);
 		
-		float r = 1.0f, g = 0.0f, b = 1.0f, a = 1.0f;
-		
-		return new LineElem(mX, mY, mX+xDist, mY+yDist, r, g, b, a, -10000);
+		return new QuadElem(mX - size/2, mY - size/2,
+				mX + size/2, mY - size/2,
+				mX + size/2, mY + size/2,
+				mX - size/2, mY + size/2,
+				brightness, brightness, brightness, 1.0f, -10000);
 	}
 }
 
