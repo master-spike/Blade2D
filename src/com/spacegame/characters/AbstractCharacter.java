@@ -57,12 +57,21 @@ public abstract class AbstractCharacter {
 	public boolean isHidden() {
 		return mHidden;
 	}
-	
+
 	public void addImpulse(float x, float y) {
 		if (mWeight == 0)
 			System.err.println("Tried to speed up when weightless!");
 		mMomentumX += x;
 		mMomentumY += y;
+	}
+	public void addScaledImpulse(float x, float y, float mag) {
+		if (mag == 0) return;
+		double nn = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+		double s = nn / mag;
+		if (s != 0) {
+			mMomentumX += x / s;
+			mMomentumY += y / s;
+		}
 	}
 	
 	public void addSpin(float spin) {
@@ -92,14 +101,7 @@ public abstract class AbstractCharacter {
 	
 	public void update() {
 		
-		double newImpulseMagnitude = Math.sqrt(Math.pow(mNewImpulseX, 2) + Math.pow(mNewImpulseY, 2));
-		if (mEngineImpulse != 0) {
-			double s = newImpulseMagnitude / mEngineImpulse;
-			if (s != 0) {
-				mMomentumX += mNewImpulseX / s;
-				mMomentumY += mNewImpulseY / s;
-			}
-		}
+		addScaledImpulse(mNewImpulseX, mNewImpulseY, mEngineImpulse);
 		if (mNewSpinImpulse != 0)
 			mSpinMomentum += ((mNewSpinImpulse > 0) ? 1 : -1) * mSpinImpulse;
 		

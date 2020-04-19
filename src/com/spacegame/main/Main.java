@@ -20,6 +20,7 @@ public class Main extends GameCore {
 	
 	private ArrayList<AbstractCharacter> mCharacters;
 	private AbstractCharacter player;
+	private AbstractCharacter earth;
 	private SideBar mSideBar;
 	
 	public int GameWidth, GameHeight, SideBarWidth;
@@ -48,7 +49,8 @@ public class Main extends GameCore {
 			mStars.add(new Star((int) (Math.random() * GameWidth), (int) (Math.random() * GameHeight)));
 		}
 		
-		mCharacters.add(new Earth(GameWidth / 2, GameHeight / 2, earthRadius));
+		earth = new Earth(GameWidth / 2, GameHeight / 2, earthRadius);
+		mCharacters.add(earth);
 	}
 
 	protected boolean toTerminate() {
@@ -82,9 +84,9 @@ public class Main extends GameCore {
 			
 			int assRadius = 20;
 			
-			int x = assRadius;
-			int minY = assRadius;
-			int maxY = GameHeight - assRadius;
+			int x = GameWidth/4;
+			int minY = GameWidth/2;
+			int maxY = GameWidth/2;
 			int y = (int) (Math.random() * (maxY - minY) + minY); 
 			
 			if (Math.random() < 0.5) {
@@ -98,6 +100,11 @@ public class Main extends GameCore {
 			Asteriod ass = new Asteriod(x, y, assRadius, GameWidth / 2, GameHeight / 2);
 			ass.addSpin((float) (Math.random() / 3) * (Math.random() < 0.5 ? 1 : -1));
 			mCharacters.add(ass);
+
+			int xDiff = (int) (earth.getPosition().x - x);
+			int yDiff = (int) (earth.getPosition().y - y);
+			
+			ass.addScaledImpulse(yDiff, xDiff, 120);
 			
 		}
 		
@@ -128,8 +135,6 @@ public class Main extends GameCore {
 		if (keys[GLFW.GLFW_KEY_D]) player.addEngineSpin(-1);
 		
 	}
-	
-	AbstractCharacter centered;
 }
 
 class Star {
