@@ -96,7 +96,7 @@ public class Main extends GameCore {
 			if (Math.random() < 0.5) y = maxY - y;
 			
 			Asteriod ass = new Asteriod(x, y, assRadius, GameWidth / 2, GameHeight / 2);
-			ass.addSpin((float) (Math.random() / 3));
+			ass.addSpin((float) (Math.random() / 3) * (Math.random() < 0.5 ? 1 : -1));
 			mCharacters.add(ass);
 			
 		}

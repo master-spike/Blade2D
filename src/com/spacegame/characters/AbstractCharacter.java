@@ -20,6 +20,8 @@ public abstract class AbstractCharacter {
 	protected float mEngineImpulse, mSpinImpulse;
 	protected float mNewImpulseX, mNewImpulseY, mNewSpinImpulse;
 	
+	protected float mContactCountdown;
+	
 	protected ArrayList<AbstractDrawElem> mShapes; // Shape is a set of Draw Elements
 	
 	public AbstractCharacter(int x, int y, int size) {
@@ -27,6 +29,7 @@ public abstract class AbstractCharacter {
 		mRotation = 0f;
 		mNewImpulseX = mNewImpulseY = 0;
 		mSize = size;
+		mContactCountdown = 0;
 		mMomentumX = mMomentumY = 0;
 		mSpinMomentum = 0;
 		mMoveSlowFactor = mSpinSlowFactor = 1f;
@@ -112,13 +115,20 @@ public abstract class AbstractCharacter {
 		
 
 		mNewImpulseX = mNewImpulseY = mNewSpinImpulse = 0;
+		
+		mContactCountdown--;
 	}
 	
 	public boolean hasCollided(AbstractCharacter other) {
+		if (mContactCountdown > 0) return false;
 		float dist = (float) (Math.pow(mX - other.mX, 2) + Math.pow(mY - other.mY, 2));
 		float minDist = (mSize + other.mSize) * (mSize + other.mSize);
 		
-		return dist <= minDist;
+		if (dist <= minDist) {
+		mContactCountdown = 100;
+		return true;
+		}
+		return false;
 	}
 	
 	public float getWeight() {return mWeight;}
