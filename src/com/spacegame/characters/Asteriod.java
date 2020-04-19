@@ -50,6 +50,11 @@ public class Asteriod extends AbstractCharacter {
 		centre.x = mX;
 		centre.y = mY;
 		
+		if (Math.abs(mAimX - mX) > mAimX || Math.abs(mAimY - mY) > mAimY) {
+			mX = Float.POSITIVE_INFINITY;
+			mY = Float.POSITIVE_INFINITY;
+		}
+		
 		// Propel to the planet!
 		
 		addEngineDirection(mAimX - mX, mAimY - mY);
