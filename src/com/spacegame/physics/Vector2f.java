@@ -24,4 +24,12 @@ public class Vector2f {
 		return new Vector2f(x_, y_);
 	}
 	
+	public static float magnitude(Vector2f v) {
+		return (float) Math.sqrt(v.x*v.x + v.y*v.y);
+	}
+	
+	public static Vector2f normalise(Vector2f v) {
+		return Vector2f.scale(v, magnitude(v));
+	}
+	
 }

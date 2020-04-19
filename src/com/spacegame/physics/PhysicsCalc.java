@@ -19,7 +19,6 @@ public class PhysicsCalc {
 		
 		c1.rotate(-theta);
 		if (c1.position.x * c1.velocity.x >= 0) return new Vect2fPair(new Vector2f(0,0), new Vector2f(0,0));
-		System.out.println(c1.velocity.x + " " + c1.velocity.y + " " + c1.position.x + " " + c1.position.y + " ");
 		
 		
 		float impulseMag = 0;
