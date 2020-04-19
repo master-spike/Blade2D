@@ -33,8 +33,5 @@ public class TexRectElem extends QuadElem {
 		tex.unbind();
 		
 	}
-	
-	
-	
 
 }

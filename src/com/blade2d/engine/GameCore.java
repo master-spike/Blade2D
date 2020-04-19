@@ -1,8 +1,6 @@
 package com.blade2d.engine;
 
 import java.util.ArrayList;
-import java.util.PriorityQueue;
-
 import com.blade2d.display.Window;
 import com.blade2d.drawelements.AbstractDrawElem;
 

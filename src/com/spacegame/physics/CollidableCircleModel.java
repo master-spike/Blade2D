@@ -12,6 +12,9 @@ public class CollidableCircleModel {
 	void translate(Vector2f t) {
 		position = Vector2f.add(position, t);
 	}
+	void transVel(Vector2f t) {
+		velocity = Vector2f.add(velocity, t);
+	}
 	
 	// around origin
 	void rotate(double theta) {
