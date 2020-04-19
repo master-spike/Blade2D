@@ -13,14 +13,18 @@ public class PhysicsCalc {
 		c1.transVel(tv);
 		c2.transVel(tv);
 		
-		double theta = Math.atan(c1.position.y / c2.position.x);
+		
+		
+		double theta = Math.atan(c1.position.y / c1.position.x);
 		
 		c1.rotate(-theta);
+		if (c1.position.x * c1.velocity.x >= 0) return new Vect2fPair(new Vector2f(0,0), new Vector2f(0,0));
+		System.out.println(c1.velocity.x + " " + c1.velocity.y + " " + c1.position.x + " " + c1.position.y + " ");
 		
 		float impulseMag = 2*c1.velocity.x*c1.mass*c2.mass/(c1.mass + c2.mass);
-		Vector2f i1 = new Vector2f(0, impulseMag);
-		Vector2f i2 = new Vector2f(0, impulseMag);
-		i2 = Vector2f.scale(i2, -1.0f);
+		Vector2f i1 = new Vector2f(impulseMag, 0);
+		Vector2f i2 = new Vector2f(impulseMag, 0);
+		i1 = Vector2f.scale(i1, -1.0f);
 		i1 = Vector2f.rotate(i1, theta);
 		i2 = Vector2f.rotate(i2, theta);
 
