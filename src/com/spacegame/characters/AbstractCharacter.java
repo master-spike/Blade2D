@@ -3,6 +3,7 @@ package com.spacegame.characters;
 import java.util.ArrayList;
 
 import com.blade2d.drawelements.AbstractDrawElem;
+import com.spacegame.physics.Vector2f;
 
 public abstract class AbstractCharacter {
 	
@@ -112,5 +113,16 @@ public abstract class AbstractCharacter {
 
 		mNewImpulseX = mNewImpulseY = mNewSpinImpulse = 0;
 	}
+	
+	public boolean hasCollided(AbstractCharacter other) {
+		float dist = (float) (Math.pow(mX - other.mX, 2) + Math.pow(mY - other.mY, 2));
+		float minDist = (mSize + other.mSize) * (mSize + other.mSize);
+		
+		return dist <= minDist;
+	}
+	
+	public float getWeight() {return mWeight;}
+	public Vector2f getVelocity() {return new Vector2f(mMomentumX / mWeight, mMomentumY / mWeight);}
+	public Vector2f getPosition() {return new Vector2f(mX, mY);}
 
 }

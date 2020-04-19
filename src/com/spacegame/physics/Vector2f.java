@@ -2,8 +2,8 @@ package com.spacegame.physics;
 
 public class Vector2f {
 
-	float x;
-	float y;
+	public float x;
+	public float y;
 	
 	public Vector2f(float x, float y) {
 		this.x = x; this.y = y;

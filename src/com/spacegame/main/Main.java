@@ -11,6 +11,10 @@ import com.spacegame.characters.AbstractCharacter;
 import com.spacegame.characters.Asteriod;
 import com.spacegame.characters.Earth;
 import com.spacegame.characters.Najeeb;
+import com.spacegame.physics.CollidableCircleModel;
+import com.spacegame.physics.PhysicsCalc;
+import com.spacegame.physics.Vect2fPair;
+import com.spacegame.physics.Vector2f;
 
 public class Main extends GameCore {
 	
@@ -29,10 +33,14 @@ public class Main extends GameCore {
 	protected void init() {
 		mSideBar = new SideBar(GameWidth, 0, SideBarWidth, GameHeight);
 		
+		int earthRadius = 100;
+		
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
 		
-		player = new Najeeb(GameWidth/2, GameHeight/2, 20, GameWidth, GameHeight);
+		player = new Najeeb((int) (GameWidth /2 - earthRadius * 1.5),
+						    (int) (GameHeight/2 - earthRadius * 1.5), 
+						    20, GameWidth, GameHeight);
 		mCharacters.add(player);
 		
 		int numStars = 100;
@@ -40,7 +48,7 @@ public class Main extends GameCore {
 			mStars.add(new Star((int) (Math.random() * GameWidth), (int) (Math.random() * GameHeight)));
 		}
 		
-		mCharacters.add(new Earth(GameWidth / 2, GameHeight / 2, 100));
+		mCharacters.add(new Earth(GameWidth / 2, GameHeight / 2, earthRadius));
 	}
 
 	protected boolean toTerminate() {
@@ -91,6 +99,24 @@ public class Main extends GameCore {
 			ass.addSpin((float) (Math.random() / 3));
 			mCharacters.add(ass);
 			
+		}
+		
+		// Collisions
+		
+		for (int i = 0; i != mCharacters.size(); i++) {
+			for (int j = i+1; j != mCharacters.size(); j++) {
+				AbstractCharacter c1 = mCharacters.get(i);
+				AbstractCharacter c2 = mCharacters.get(j);
+				
+				// TODO: make sure they're actually travelling towards each other
+				if (c1.hasCollided(c2)) { // Oh No!!!
+					CollidableCircleModel m1 = new CollidableCircleModel(c1.getWeight(), c1.getVelocity(), c1.getPosition());
+					CollidableCircleModel m2 = new CollidableCircleModel(c2.getWeight(), c2.getVelocity(), c2.getPosition());
+					Vect2fPair ans = PhysicsCalc.getElasticCollision(m1, m2);
+					c1.addImpulse(ans.v1.x, ans.v1.y);
+					c2.addImpulse(ans.v2.x, ans.v2.y);
+				}
+			}
 		}
 		
 		// Control player
