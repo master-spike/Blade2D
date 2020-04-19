@@ -23,13 +23,13 @@ public class PhysicsCalc {
 		
 		
 		float impulseMag = 0;
-		if(c1.mass != Double.POSITIVE_INFINITY && c2.mass != Double.POSITIVE_INFINITY) {
+		if(c1.mass != Float.POSITIVE_INFINITY && c2.mass != Float.POSITIVE_INFINITY) {
 			impulseMag = 2*c1.velocity.x*c1.mass*c2.mass/(c1.mass + c2.mass);
 		}
-		else if(c2.mass == Double.POSITIVE_INFINITY && c1.mass != Double.POSITIVE_INFINITY) {
+		else if(c2.mass == Float.POSITIVE_INFINITY && c1.mass != Float.POSITIVE_INFINITY) {
 			impulseMag = 2*c1.velocity.x*c1.mass;
 		}
-		else if (c1.mass == Double.POSITIVE_INFINITY&& c2.mass != Double.POSITIVE_INFINITY) {
+		else if (c1.mass == Float.POSITIVE_INFINITY&& c2.mass != Float.POSITIVE_INFINITY) {
 			impulseMag = 2*c1.velocity.x*c2.mass;
 		}
 		else {

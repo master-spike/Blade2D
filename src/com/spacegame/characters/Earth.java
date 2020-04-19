@@ -11,7 +11,7 @@ public class Earth extends AbstractCharacter {
 	public Earth(int x, int y, int size) {
 		super(x, y, size);
 		
-		mWeight = 100000;
+		mWeight = Float.POSITIVE_INFINITY;
 		
 		tex = new Texture("earth.png");
 	}
