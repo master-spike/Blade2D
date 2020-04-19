@@ -19,7 +19,7 @@ public class Asteroid extends AbstractCharacter {
 	
 	public Asteroid (int x, int y, int size, int aimX, int aimY) {
 		super(x, y, size);
-		mWeight = 5;
+		mWeight = 100;
 		mEngineImpulse = 1f;
 		
 		mAimX = aimX; mAimY = aimY;

@@ -35,7 +35,7 @@ public class Main extends GameCore {
 
 	// CONSTS
 
-	public static final float GRAVITY_CONST = 10;
+	public static final float GRAVITY_CONST = 4000;
 	public static final float ASTEROID_MIN_SPAWN_HEIGHT = 200;
 	public static final float ASTEROID_MAX_SPAWN_HEIGHT = 300;
 	public static final float ASTEROID_SPAWN_CHANCE_PER_FRAME = 0.004f;

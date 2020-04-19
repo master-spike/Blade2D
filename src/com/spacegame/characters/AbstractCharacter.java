@@ -131,12 +131,17 @@ public abstract class AbstractCharacter {
 		return false;
 	}
 	
-	public void applyGravity(float mAimX, float mAimY) {
+	public void applyGravity(float aimX, float aimY) {
 		
-		Vector2f grav = new Vector2f(mAimX - mX, mAimY - mY);
-		grav = Vector2f.scale(grav, (float) (Main.GRAVITY_CONST/Math.pow(Vector2f.magnitude(grav),2)));
-		addImpulse(grav.x*mWeight, grav.y*mWeight);
+		Vector2f grav = getGravityForce(aimX, aimY);
+		addImpulse(grav.x, grav.y);
 		
+	}
+	
+	public Vector2f getGravityForce(float aimX, float aimY) {
+		Vector2f grav = new Vector2f(aimX - mX, aimY - mY);
+		grav = Vector2f.scale(Vector2f.normalise(grav), (float) (Main.GRAVITY_CONST/Math.pow(Vector2f.magnitude(grav),2)));
+		return Vector2f.scale(grav, mWeight);
 	}
 	
 	public void onCollide() {};
