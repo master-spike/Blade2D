@@ -14,25 +14,27 @@ import com.spacegame.characters.Earth;
 import com.spacegame.characters.Najeeb;
 import com.spacegame.guielems.AbstractGUIElem;
 import com.spacegame.guielems.AsteroidWarning;
+import com.spacegame.guielems.HealthDecreaseIndicator;
+import com.spacegame.guielems.Healthbar;
 import com.spacegame.physics.CollidableCircleModel;
 import com.spacegame.physics.PhysicsCalc;
 import com.spacegame.physics.Vect2fPair;
 import com.spacegame.physics.Vector2f;
 
 public class Main extends GameCore {
-	
+
 	public static Main instance;
-	
+
 	private ArrayList<AbstractCharacter> mCharacters;
 	private AbstractCharacter player;
 	private AbstractCharacter earth;
 	private SideBar mSideBar;
-	
+
 	public ArrayList<AbstractGUIElem> guielems;
 	public ArrayList<Timer> timers;
-	
+
 	// CONSTS
-	
+
 	public static final float GRAVITY_CONST = 10;
 	public static final float ASTEROID_MIN_SPAWN_HEIGHT = 200;
 	public static final float ASTEROID_MAX_SPAWN_HEIGHT = 300;
@@ -41,13 +43,19 @@ public class Main extends GameCore {
 	public static final int ASS_RADIUS = 10;
 	public static final int EARTH_RADIUS = 70;
 	public static final int NUM_STARS = 200;
+	public static final int MAX_HP = 300;
 
-	
 	public int GameWidth, GameHeight, SideBarWidth;
-	
+
 	private ArrayList<Star> mStars;
-	
+
 	public Font font;
+
+	public int hp;
+
+	private boolean paused;
+	
+	ArrayList<AbstractDrawElem> pausemenu;
 
 	public Main(int w, int h, String t, int r) {
 		super(w, h, t, r);
@@ -55,22 +63,31 @@ public class Main extends GameCore {
 	}
 
 	protected void init() {
-		font = new Font("res/mc_0.png","res/mc.fnt");
+		font = new Font("res/mc_0.png", "res/mc.fnt");
 		mSideBar = new SideBar(GameWidth, 0, SideBarWidth, GameHeight);
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
 		guielems = new ArrayList<AbstractGUIElem>();
 		timers = new ArrayList<Timer>();
+		hp = MAX_HP;
+		paused = false;
+		keysPrevious = new boolean[window.input.getKeys().length];
 		
-		player = new Najeeb((int) (GameWidth /2 - EARTH_RADIUS * 2),
-						    (int) (GameHeight/2 - EARTH_RADIUS * 2), 
-						    20, GameWidth, GameHeight);
+		pausemenu = new ArrayList<AbstractDrawElem>();
+		pausemenu.addAll(font.getString("Paused: press ESCAPE to exit", 30, 360, 3.0f,1f, 0.0f, 1.0f, 1.0f, 12000000));
+		pausemenu.addAll(font.getString("     or SPACE to continue", 30, 320, 3.0f, 1f, 0.0f, 1.0f, 1.0f, 12000000));
+		
+		
+		player = new Najeeb((int) (GameWidth / 2 - EARTH_RADIUS * 2), (int) (GameHeight / 2 - EARTH_RADIUS * 2), 20,
+				GameWidth, GameHeight);
 		mCharacters.add(player);
-		
+
 		for (int i = 0; i != NUM_STARS; i++) {
 			mStars.add(new Star((int) (Math.random() * GameWidth), (int) (Math.random() * GameHeight)));
 		}
-		
+
+		guielems.add(new Healthbar(200, 40, 800, 600, 2, 0.5f, 0.5f, 0.5f, 0f, 0f, 0f, MAX_HP / 3, (2 * MAX_HP) / 3));
+
 		earth = new Earth(GameWidth / 2, GameHeight / 2, EARTH_RADIUS);
 		mCharacters.add(earth);
 	}
@@ -78,17 +95,20 @@ public class Main extends GameCore {
 	protected boolean toTerminate() {
 		return super.window.shouldClose();
 	}
+	
+	boolean[] keysPrevious;
 
 	protected void update() {
-		
+
 		// Do drawing
-		
+
 		super.draw_elems.clear();
-		
-		for (AbstractCharacter character: mCharacters) {
-			if(!character.isHidden()) super.draw_elems.addAll(character.getShape());
+
+		for (AbstractCharacter character : mCharacters) {
+			if (!character.isHidden())
+				super.draw_elems.addAll(character.getShape());
 		}
-		for (Star star: mStars) {
+		for (Star star : mStars) {
 			super.draw_elems.add(star.getShape());
 		}
 		for (AbstractGUIElem g : guielems) {
@@ -96,103 +116,137 @@ public class Main extends GameCore {
 		}
 		super.draw_elems.addAll(mSideBar.getShapes());
 		
-		// update game elements
-		for (AbstractGUIElem g : guielems) {
-			g.update();
-		}
-		for (AbstractCharacter character: mCharacters) {
-			character.update();
-		}
-		for (Star s : mStars) {
-			s.update();
-		}
 		
 		
-		// Spawn asteroids
-		
-		if (Math.random() < ASTEROID_SPAWN_CHANCE_PER_FRAME) {
-			
-			
-			
+		// do this only if not paused
+		if (!paused) {
+			// update game elements
+			for (AbstractGUIElem g : guielems) {
+				g.update();
+			}
+			for (AbstractCharacter character : mCharacters) {
+				character.update();
+			}
+			for (Star s : mStars) {
+				s.update();
+			}
 
-			float theta = (float) (Math.random()*Math.PI*2);
-			float height = (float) (ASTEROID_MIN_SPAWN_HEIGHT+Math.random()*(ASTEROID_MAX_SPAWN_HEIGHT - ASTEROID_MIN_SPAWN_HEIGHT));
-			Vector2f spawnPos = new Vector2f((float)(height*Math.cos(theta)), (float)(height*Math.sin(theta)));
-			
-			AsteroidSpawnEvent ase = new AsteroidSpawnEvent(Vector2f.add(spawnPos, earth.getPosition()));
-			AsteroidWarning aw = new AsteroidWarning(Vector2f.add(spawnPos, earth.getPosition()), ASS_RADIUS);
-			guielems.add(aw);
-			DeleteGUIElemEvent del = new DeleteGUIElemEvent(aw);
-			Timer t = new Timer(Main.ASTEROID_SPAWN_WARNING_TIME);
-			
-			t.addEvent(ase);
-			t.addEvent(del);
-			
-			t.start();
-		}
-		
-		// Collisions
-		
-		for (int i = 0; i != mCharacters.size(); i++) {
-			for (int j = i+1; j != mCharacters.size(); j++) {
-				AbstractCharacter c1 = mCharacters.get(i);
-				AbstractCharacter c2 = mCharacters.get(j);
-				
-				
-				
-				if (c1.hasCollided(c2)) { // Oh No!!!
-					CollidableCircleModel m1 = new CollidableCircleModel(c1.getWeight(), c1.getVelocity(), c1.getPosition());
-					CollidableCircleModel m2 = new CollidableCircleModel(c2.getWeight(), c2.getVelocity(), c2.getPosition());
-					Vect2fPair ans = PhysicsCalc.getElasticCollision(m1, m2);
-					c1.addImpulse(ans.v1.x, ans.v1.y);
-					c2.addImpulse(ans.v2.x, ans.v2.y);
-					c1.onCollide();
-					c2.onCollide();
+			// Spawn asteroids
+
+			if (Math.random() < ASTEROID_SPAWN_CHANCE_PER_FRAME) {
+
+				float theta = (float) (Math.random() * Math.PI * 2);
+				float height = (float) (ASTEROID_MIN_SPAWN_HEIGHT
+						+ Math.random() * (ASTEROID_MAX_SPAWN_HEIGHT - ASTEROID_MIN_SPAWN_HEIGHT));
+				Vector2f spawnPos = new Vector2f((float) (height * Math.cos(theta)),
+						(float) (height * Math.sin(theta)));
+
+				AsteroidSpawnEvent ase = new AsteroidSpawnEvent(Vector2f.add(spawnPos, earth.getPosition()));
+				AsteroidWarning aw = new AsteroidWarning(Vector2f.add(spawnPos, earth.getPosition()), ASS_RADIUS);
+				guielems.add(aw);
+				DeleteGUIElemEvent del = new DeleteGUIElemEvent(aw);
+				Timer t = new Timer(Main.ASTEROID_SPAWN_WARNING_TIME);
+
+				t.addEvent(ase);
+				t.addEvent(del);
+
+				t.start();
+			}
+
+			// Collisions
+
+			for (int i = 0; i != mCharacters.size(); i++) {
+				for (int j = i + 1; j != mCharacters.size(); j++) {
+					AbstractCharacter c1 = mCharacters.get(i);
+					AbstractCharacter c2 = mCharacters.get(j);
+
+					if (c1.hasCollided(c2)) { // Oh No!!!
+						CollidableCircleModel m1 = new CollidableCircleModel(c1.getWeight(), c1.getVelocity(),
+								c1.getPosition());
+						CollidableCircleModel m2 = new CollidableCircleModel(c2.getWeight(), c2.getVelocity(),
+								c2.getPosition());
+						Vect2fPair ans = PhysicsCalc.getElasticCollision(m1, m2);
+						c1.addImpulse(ans.v1.x, ans.v1.y);
+						c2.addImpulse(ans.v2.x, ans.v2.y);
+						c1.onCollide();
+						c2.onCollide();
+					}
 				}
 			}
+
+			// explode asteroids colliding into Earth, and reduce hp by energy
+			// of impact
+			ArrayList<AbstractEvent> earth_collision_events = new ArrayList<AbstractEvent>();
+			for (AbstractCharacter c : mCharacters) {
+				if (c.getClass() == Asteroid.class && c.hasCollided(earth)) {
+					earth_collision_events.add(new AsteroidExplodeEvent((Asteroid) c));
+					int r = (int) (Vector2f.magnitude(c.getVelocity()) * c.getWeight());
+					earth_collision_events
+							.add(new ReduceHPEvent(r));
+					HealthDecreaseIndicator hdind =  new HealthDecreaseIndicator(c.getPosition().x, c.getPosition().y, r);
+					guielems.add(hdind);
+					Timer hdind_timer = new Timer(HealthDecreaseIndicator.DURATION);
+					hdind_timer.addEvent(new DeleteGUIElemEvent(hdind));
+					hdind_timer.start();
+				}
+			}
+			for (AbstractEvent e : earth_collision_events) {
+				e.trigger();
+			}
+
+			// gravity
+
+			for (AbstractCharacter c : mCharacters) {
+				if (!c.equals(earth))
+					c.applyGravity(earth.getPosition().x, earth.getPosition().y);
+			}
+
+			// Control player
+
+			boolean[] keys = window.input.getKeys();
+			if (keys[GLFW.GLFW_KEY_W])
+				player.addFowardImpulse(1);
+			if (keys[GLFW.GLFW_KEY_S])
+				player.addFowardImpulse(-1);
+			if (keys[GLFW.GLFW_KEY_A])
+				player.addEngineSpin(1);
+			if (keys[GLFW.GLFW_KEY_D])
+				player.addEngineSpin(-1);
+
+			// decrement timers
+			for (Timer t : timers) {
+				t.decrement();
+			}
+			
+			// Check pause button pressed
+			if (keys[GLFW.GLFW_KEY_SPACE] && !keysPrevious[GLFW.GLFW_KEY_SPACE]) {
+				paused = true;
+				System.out.println();
+			}
+			
+			
 		}
-		
-		// explode asteroids colliding into Earth
-		ArrayList<AsteroidExplodeEvent> explosions = new ArrayList<AsteroidExplodeEvent>();
-		for (AbstractCharacter c : mCharacters) {
-			if (c.getClass() == Asteroid.class && c.hasCollided(earth)) {
-				explosions.add(new AsteroidExplodeEvent((Asteroid)c));
-				
+		else {
+			super.draw_elems.addAll(pausemenu);
+			if (window.input.getKeys()[GLFW.GLFW_KEY_ESCAPE] && !keysPrevious[GLFW.GLFW_KEY_ESCAPE]) {
+				terminate();
+			}
+			if (window.input.getKeys()[GLFW.GLFW_KEY_SPACE] && !keysPrevious[GLFW.GLFW_KEY_SPACE]) {
+				paused = false;
 			}
 		}
-		for (AsteroidExplodeEvent e : explosions) {
-			e.trigger();
-		}
-		
-		// gravity
-		
-		for (AbstractCharacter c : mCharacters) {
-			if (!c.equals(earth)) c.applyGravity(earth.getPosition().x, earth.getPosition().y);
-		}
-		
-		// Control player
-		
-		boolean[] keys = window.input.getKeys();
-		if (keys[GLFW.GLFW_KEY_W]) player.addFowardImpulse( 1);
-		if (keys[GLFW.GLFW_KEY_S]) player.addFowardImpulse(-1);
-		if (keys[GLFW.GLFW_KEY_A]) player.addEngineSpin( 1);
-		if (keys[GLFW.GLFW_KEY_D]) player.addEngineSpin(-1);
-		
-		// decrement timers
-		for(Timer t : timers) {
-			t.decrement();
-		}
-		
+		keysPrevious = window.input.getKeys().clone();
+
 	}
-	
-	public Vector2f getEarthPos(){
+
+	public Vector2f getEarthPos() {
 		return earth.getPosition();
 	}
-	
+
 	public void spawnCharacter(AbstractCharacter c) {
 		mCharacters.add(c);
 	}
-	
+
 	public void despawnCharacter(AbstractCharacter c) {
 		mCharacters.remove(c);
 	}
@@ -200,36 +254,33 @@ public class Main extends GameCore {
 
 class Star {
 	private static final float size = 3;
-	
+
 	public final int mX, mY;
-	
-	public Star (int x, int y) {
+
+	public Star(int x, int y) {
 		mX = x;
 		mY = y;
-		brightness = (float)Math.random();
+		brightness = (float) Math.random();
 	}
-	
+
 	private float brightness;
-	
+
 	public void update() {
 		double r = Math.random();
 		if (r < 0.5) {
 			brightness -= 0.1f;
-		}
-		else {
+		} else {
 			brightness += 0.2f;
 		}
-		if (brightness > 1f) brightness = 1f;
-		if (brightness < 0.4f) brightness = 0.5f;
+		if (brightness > 1f)
+			brightness = 1f;
+		if (brightness < 0.4f)
+			brightness = 0.5f;
 	}
-	
+
 	public AbstractDrawElem getShape() {
-		
-		return new QuadElem(mX - size/2, mY - size/2,
-				mX + size/2, mY - size/2,
-				mX + size/2, mY + size/2,
-				mX - size/2, mY + size/2,
-				brightness, brightness, brightness, 1.0f, -10000);
+
+		return new QuadElem(mX - size / 2, mY - size / 2, mX + size / 2, mY - size / 2, mX + size / 2, mY + size / 2,
+				mX - size / 2, mY + size / 2, brightness, brightness, brightness, 1.0f, -10000);
 	}
 }
-

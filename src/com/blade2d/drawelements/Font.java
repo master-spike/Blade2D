@@ -34,6 +34,7 @@ public class Font {
 					heights[c] = Integer.parseInt(lnsplit[4]);
 				}
 			}
+			sc.close();
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
