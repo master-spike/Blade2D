@@ -39,8 +39,8 @@ public class ExplodingAsteriod extends AbstractGUIElem {
 		Vertex prev = mVertices.get(mVertices.size()-1);
 		for (Vertex curr: mVertices) {
 			Vector2f a = new Vector2f((prev.x + curr.x), (prev.y + curr.y));
-			a = Vector2f.scale(Vector2f.normalise(a), mCounter);
-			TriElem tri = new TriElem(mX+a.x, mY+a.y, mX+prev.x+a.x, mY+prev.y+a.y, mX+curr.x+a.x, mY+curr.y+a.y, r, g, b, 1.0f, 10);
+			a = Vector2f.scale(Vector2f.normalise(a), mCounter*3);
+			TriElem tri = new TriElem(mX+a.x, mY+a.y, mX+prev.x+a.x, mY+prev.y+a.y, mX+curr.x+a.x, mY+curr.y+a.y, r, g, b, 1.0f, 0);
 			drawelems.add(tri);
 		}
 		

@@ -44,6 +44,8 @@ public class Asteriod extends AbstractCharacter {
 			currLength = (float) (Math.random() * (maxLength - minLength) + minLength);
 		}
 		
+		mMoveSlowFactor = 0.9995f;
+		
 		centre = new Vertex(x, y);
 	}
 	
