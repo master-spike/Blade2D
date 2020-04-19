@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import com.blade2d.drawelements.AbstractDrawElem;
 import com.blade2d.drawelements.TriElem;
 import com.blade2d.drawelements.Vertex;
-import com.spacegame.main.Main;
-import com.spacegame.physics.Vector2f;
 
 public class Asteriod extends AbstractCharacter {
 	

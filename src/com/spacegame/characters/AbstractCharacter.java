@@ -106,9 +106,6 @@ public abstract class AbstractCharacter {
 		if (mNewSpinImpulse != 0)
 			mSpinMomentum += ((mNewSpinImpulse > 0) ? 1 : -1) * mSpinImpulse;
 		
-		float SPINSLOWFACTOR = 0.99f;
-		float MOVESLOWFACTOR = 0.99f;
-		
 		mX += mMomentumX / mWeight;
 		mY += mMomentumY / mWeight;
 		mRotation += mSpinMomentum;

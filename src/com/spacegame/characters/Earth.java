@@ -1,6 +1,5 @@
 package com.spacegame.characters;
 
-import com.blade2d.drawelements.LineElem;
 import com.blade2d.drawelements.TexRectElem;
 import com.blade2d.drawelements.Texture;
 
