@@ -15,8 +15,8 @@ public class Asteriod extends AbstractCharacter {
 	
 	public Asteriod (int x, int y, int size, int aimX, int aimY) {
 		super(x, y, size);
-		mWeight = 100;
-		mEngineImpulse = 3f;
+		mWeight = 33;
+		mEngineImpulse = 1f;
 		
 		mAimX = aimX; mAimY = aimY;
 		

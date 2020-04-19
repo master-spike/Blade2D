@@ -22,8 +22,10 @@ public class Earth extends AbstractCharacter {
 		// draw stuff
 		
 		mShapes.clear();
-		int x1 = (int) (mX - mSize/2), x2 = (int) (mX + mSize/2), x3 = x2, x4 = x1;
-		int y1 = (int) (mY - mSize/2), y2 = y1, y3 = (int) (mY + mSize/2), y4 = y3;
+		
+		double constant = 1.0/Math.sqrt(2.0);
+		int x1 = (int) (mX - mSize*constant), x2 = (int) (mX + mSize*constant), x3 = x2, x4 = x1;
+		int y1 = (int) (mY - mSize*constant), y2 = y1, y3 = (int) (mY + mSize*constant), y4 = y3;
 		TexRectElem elem = new TexRectElem(x1,y1,x2,y2,x3,y3,x4,y4, 0, 1f, tex);
 		
 		mShapes.add(elem);

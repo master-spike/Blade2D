@@ -125,7 +125,7 @@ public abstract class AbstractCharacter {
 		float minDist = (mSize + other.mSize) * (mSize + other.mSize);
 		
 		if (dist <= minDist) {
-		mContactCountdown = 100;
+		mContactCountdown = 0;
 		return true;
 		}
 		return false;
