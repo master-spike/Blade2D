@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import org.lwjgl.glfw.GLFW;
 
 import com.blade2d.drawelements.AbstractDrawElem;
+import com.blade2d.drawelements.Font;
 import com.blade2d.drawelements.QuadElem;
 import com.blade2d.engine.GameCore;
 import com.spacegame.characters.AbstractCharacter;
+import com.spacegame.characters.Asteroid;
 import com.spacegame.characters.Earth;
 import com.spacegame.characters.Najeeb;
 import com.spacegame.guielems.AbstractGUIElem;
@@ -44,6 +46,8 @@ public class Main extends GameCore {
 	public int GameWidth, GameHeight, SideBarWidth;
 	
 	private ArrayList<Star> mStars;
+	
+	public Font font;
 
 	public Main(int w, int h, String t, int r) {
 		super(w, h, t, r);
@@ -51,8 +55,8 @@ public class Main extends GameCore {
 	}
 
 	protected void init() {
+		font = new Font("res/mc_0.png","res/mc.fnt");
 		mSideBar = new SideBar(GameWidth, 0, SideBarWidth, GameHeight);
-		
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
 		guielems = new ArrayList<AbstractGUIElem>();
@@ -115,9 +119,16 @@ public class Main extends GameCore {
 			float height = (float) (ASTEROID_MIN_SPAWN_HEIGHT+Math.random()*(ASTEROID_MAX_SPAWN_HEIGHT - ASTEROID_MIN_SPAWN_HEIGHT));
 			Vector2f spawnPos = new Vector2f((float)(height*Math.cos(theta)), (float)(height*Math.sin(theta)));
 			
-			AsteroidSpawnEvent ase = new AsteroidSpawnEvent(Vector2f.add(spawnPos, earth.getPosition()), this);
+			AsteroidSpawnEvent ase = new AsteroidSpawnEvent(Vector2f.add(spawnPos, earth.getPosition()));
 			AsteroidWarning aw = new AsteroidWarning(Vector2f.add(spawnPos, earth.getPosition()), ASS_RADIUS);
 			guielems.add(aw);
+			DeleteGUIElemEvent del = new DeleteGUIElemEvent(aw);
+			Timer t = new Timer(Main.ASTEROID_SPAWN_WARNING_TIME);
+			
+			t.addEvent(ase);
+			t.addEvent(del);
+			
+			t.start();
 		}
 		
 		// Collisions
@@ -127,7 +138,8 @@ public class Main extends GameCore {
 				AbstractCharacter c1 = mCharacters.get(i);
 				AbstractCharacter c2 = mCharacters.get(j);
 				
-				// TODO: make sure they're actually travelling towards each other
+				
+				
 				if (c1.hasCollided(c2)) { // Oh No!!!
 					CollidableCircleModel m1 = new CollidableCircleModel(c1.getWeight(), c1.getVelocity(), c1.getPosition());
 					CollidableCircleModel m2 = new CollidableCircleModel(c2.getWeight(), c2.getVelocity(), c2.getPosition());
@@ -138,6 +150,18 @@ public class Main extends GameCore {
 					c2.onCollide();
 				}
 			}
+		}
+		
+		// explode asteroids colliding into Earth
+		ArrayList<AsteroidExplodeEvent> explosions = new ArrayList<AsteroidExplodeEvent>();
+		for (AbstractCharacter c : mCharacters) {
+			if (c.getClass() == Asteroid.class && c.hasCollided(earth)) {
+				explosions.add(new AsteroidExplodeEvent((Asteroid)c));
+				
+			}
+		}
+		for (AsteroidExplodeEvent e : explosions) {
+			e.trigger();
 		}
 		
 		// gravity
@@ -167,6 +191,10 @@ public class Main extends GameCore {
 	
 	public void spawnCharacter(AbstractCharacter c) {
 		mCharacters.add(c);
+	}
+	
+	public void despawnCharacter(AbstractCharacter c) {
+		mCharacters.remove(c);
 	}
 }
 

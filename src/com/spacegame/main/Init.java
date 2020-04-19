@@ -1,5 +1,6 @@
 package com.spacegame.main;
 
+
 public class Init {
 
 	public static void main(String[] args) {
@@ -12,6 +13,8 @@ public class Init {
 		game.GameHeight = HEIGHT;
 		game.SideBarWidth = SIDEBARWIDTH;
 		game.Start();
+		
+
 
 	}
 

@@ -44,6 +44,18 @@ public class Image {
 		buffer = Buffers.createIntBuffer(data).asReadOnlyBuffer();
 	}
 	
+	
+	// create an Image from only a section of the file
+	public Image(String filename, int x, int y, int w, int h) {
+		BufferedImage image = loadImageFile(filename);
+		
+		width = w;
+		height = h;
+		
+		data = getPixelsFromImageSection(image, x, y, w, h);
+		buffer = Buffers.createIntBuffer(data).asReadOnlyBuffer();
+	}
+	
 	/**
 	 * @param filename - path to image to load
 	 * @return loaded BufferedImage
@@ -77,6 +89,25 @@ public class Image {
 		// Reorder argb into abgr
 		int[] data = new int[width * height];
 		for(int i = 0; i < width * height; i++){
+			int a = (pixels[i] & 0xff000000) >> 24;
+			int r = (pixels[i] & 0xff0000) >> 16;
+			int g = (pixels[i] & 0xff00) >> 8;
+			int b = (pixels[i] & 0xff);
+			
+			data[i] = a << 24 | b << 16 | g << 8 | r;
+		}
+		
+		return data;
+	}
+	int[] getPixelsFromImageSection(BufferedImage image, int x, int y, int w, int h) {
+		
+		// Grab raw pixel data
+		int[] pixels = new int[w * h];
+		image.getRGB(x, y, w, h, pixels, 0, w);
+		
+		// Reorder argb into abgr
+		int[] data = new int[w * h];
+		for(int i = 0; i < w * h; i++){
 			int a = (pixels[i] & 0xff000000) >> 24;
 			int r = (pixels[i] & 0xff0000) >> 16;
 			int g = (pixels[i] & 0xff00) >> 8;

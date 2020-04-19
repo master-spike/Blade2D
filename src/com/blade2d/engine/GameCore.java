@@ -28,9 +28,6 @@ public abstract class GameCore {
 			updateWindow();
 			update();
 			render();
-			if ((double)(System.nanoTime() - last_time)/((double)one_bill/(double)update_rate) >= 1) {
-				System.out.println("frame delayed by " + (System.nanoTime() - last_time - one_bill/update_rate)/1000000 + "ms");
-			}
 			while(System.nanoTime() - last_time < one_bill/update_rate);
 			last_time = System.nanoTime();
 		}

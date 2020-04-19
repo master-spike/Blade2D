@@ -35,6 +35,14 @@ public class Texture {
 		
 		createTexture(id, image);
 	}
+	public Texture(String filename, int x, int y, int w, int h){
+		image = new Image(filename, x, y, w, h);
+		
+		// Generate ID
+		id = GL11.glGenTextures();
+		
+		createTexture(id, image);
+	}
 	
 	/**
 	 * Creates an OpenGL texture based on a given Image
@@ -51,8 +59,8 @@ public class Texture {
 		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 		
 		// Setup texture
-		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		
 		GL11.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.buffer);
 		GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);

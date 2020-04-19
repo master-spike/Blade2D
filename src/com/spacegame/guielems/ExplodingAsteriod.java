@@ -2,19 +2,16 @@ package com.spacegame.guielems;
 
 import java.util.ArrayList;
 
-import com.blade2d.drawelements.AbstractDrawElem;
 import com.blade2d.drawelements.TriElem;
 import com.blade2d.drawelements.Vertex;
 import com.spacegame.main.AbstractEvent;
 import com.spacegame.main.DeleteGUIElemEvent;
-import com.spacegame.main.DeleteGUIElemTimer;
-import com.spacegame.main.Main;
 import com.spacegame.main.Timer;
 import com.spacegame.physics.Vector2f;
 
 public class ExplodingAsteriod extends AbstractGUIElem {
 	
-	private final int MAX_COUNT = 100;
+	private final int DURATION = 100;
 	
 	protected int mX, mY;
 	protected ArrayList<Vertex> mVertices;
@@ -25,12 +22,13 @@ public class ExplodingAsteriod extends AbstractGUIElem {
 		mX = x;
 		mY = y;
 		mVertices = vertices;
+		ArrayList<AbstractEvent> arr = new ArrayList<AbstractEvent>();
+		arr.add(new DeleteGUIElemEvent(this));
 		mCounter = 0;
-		Timer t = new DeleteGUIElemTimer(MAX_COUNT, this);
+		Timer t = new Timer(DURATION, arr);
 		t.start();
 	}
-	
-	@Override
+
 	public void update() {
 		mCounter++;
 		
@@ -42,10 +40,6 @@ public class ExplodingAsteriod extends AbstractGUIElem {
 			a = Vector2f.scale(Vector2f.normalise(a), mCounter*3);
 			TriElem tri = new TriElem(mX+a.x, mY+a.y, mX+prev.x+a.x, mY+prev.y+a.y, mX+curr.x+a.x, mY+curr.y+a.y, r, g, b, 1.0f, 0);
 			drawelems.add(tri);
-		}
-		
-		if (mCounter > MAX_COUNT) {
-			Main.instance.guielems.remove(this);
 		}
 	}
 

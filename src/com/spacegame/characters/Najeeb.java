@@ -19,7 +19,7 @@ public class Najeeb extends AbstractCharacter {
 		mWrapWidth = ww;
 		mWrapHeight = wh;
 		mSpinSlowFactor = 0.95f;
-		mMoveSlowFactor = 0.99f;
+		mMoveSlowFactor = 1f;
 	}
 	
 	public void update() {
