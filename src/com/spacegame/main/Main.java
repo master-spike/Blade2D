@@ -9,6 +9,7 @@ import com.blade2d.drawelements.LineElem;
 import com.blade2d.engine.GameCore;
 import com.spacegame.characters.AbstractCharacter;
 import com.spacegame.characters.Asteriod;
+import com.spacegame.characters.Earth;
 import com.spacegame.characters.Najeeb;
 
 public class Main extends GameCore {
@@ -39,9 +40,7 @@ public class Main extends GameCore {
 			mStars.add(new Star((int) (Math.random() * GameWidth), (int) (Math.random() * GameHeight)));
 		}
 		
-		Asteriod ass = new Asteriod(50, 50, 20, GameWidth / 2, GameHeight / 2);
-		ass.addSpin(0.3f);
-		mCharacters.add(ass);
+		mCharacters.add(new Earth(GameWidth / 2, GameHeight / 2, 100));
 	}
 
 	protected boolean toTerminate() {
@@ -66,6 +65,32 @@ public class Main extends GameCore {
 		
 		for (AbstractCharacter character: mCharacters) {
 			character.update();
+		}
+		
+		// Spawn asteroids
+		
+		float spawnChance = 0.001f;
+		if (Math.random() < spawnChance) {
+			
+			int assRadius = 20;
+			
+			int x = assRadius;
+			int minY = assRadius;
+			int maxY = GameHeight - assRadius;
+			int y = (int) (Math.random() * (maxY - minY) + minY); 
+			
+			if (Math.random() < 0.5) {
+				int temp = x;
+				x = y;
+				y = temp;
+			}
+			if (Math.random() < 0.5) x = maxY - x;
+			if (Math.random() < 0.5) y = maxY - y;
+			
+			Asteriod ass = new Asteriod(x, y, assRadius, GameWidth / 2, GameHeight / 2);
+			ass.addSpin((float) (Math.random() / 3));
+			mCharacters.add(ass);
+			
 		}
 		
 		// Control player

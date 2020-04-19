@@ -14,11 +14,11 @@ public class Najeeb extends AbstractCharacter {
 	public Najeeb(int x, int y, int size, int ww, int wh) {
 		super(x, y, size);
 		mWeight = 10;
-		mEngineImpulse = 0.5f;
-		mSpinImpulse = 0.0005f;
+		mEngineImpulse = 0.4f;
+		mSpinImpulse = 0.005f;
 		mWrapWidth = ww;
 		mWrapHeight = wh;
-		mSpinSlowFactor = 0.99f;
+		mSpinSlowFactor = 0.96f;
 		mMoveSlowFactor = 0.99f;
 	}
 	
