@@ -8,9 +8,10 @@ import com.blade2d.drawelements.AbstractDrawElem;
 import com.blade2d.drawelements.LineElem;
 import com.blade2d.engine.GameCore;
 import com.spacegame.characters.AbstractCharacter;
-import com.spacegame.characters.Asteriod;
 import com.spacegame.characters.Earth;
 import com.spacegame.characters.Najeeb;
+import com.spacegame.guielems.AbstractGUIElem;
+import com.spacegame.guielems.AsteroidWarning;
 import com.spacegame.physics.CollidableCircleModel;
 import com.spacegame.physics.PhysicsCalc;
 import com.spacegame.physics.Vect2fPair;
@@ -22,6 +23,14 @@ public class Main extends GameCore {
 	private AbstractCharacter player;
 	private AbstractCharacter earth;
 	private SideBar mSideBar;
+	
+	ArrayList<AbstractGUIElem> guielems;
+	ArrayList<Timer> timers;
+	
+	public static final float GRAVITY_CONST = 10;
+	public static final float ASTEROID_MIN_SPAWN_HEIGHT = 200;
+	public static final float ASTEROID_MAX_SPAWN_HEIGHT = 300;
+	public static final int ASS_RADIUS = 10;
 	
 	public int GameWidth, GameHeight, SideBarWidth;
 	
@@ -38,6 +47,8 @@ public class Main extends GameCore {
 		
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
+		guielems = new ArrayList<AbstractGUIElem>();
+		timers = new ArrayList<Timer>();
 		
 		player = new Najeeb((int) (GameWidth /2 - earthRadius * 1.5),
 						    (int) (GameHeight/2 - earthRadius * 1.5), 
@@ -69,42 +80,40 @@ public class Main extends GameCore {
 		for (Star star: mStars) {
 			super.draw_elems.add(star.getShape());
 		}
+		for (AbstractGUIElem g : guielems) {
+			super.draw_elems.addAll(g.getShape());
+		}
 		super.draw_elems.addAll(mSideBar.getShapes());
 		
-		// Get game objects to update 
-		
+		// update game elements
+		for (AbstractGUIElem g : guielems) {
+			g.update();
+		}
 		for (AbstractCharacter character: mCharacters) {
 			character.update();
 		}
 		
+		
 		// Spawn asteroids
 		
-		float spawnChance = 0.001f;
+		float spawnChance = 0.002f;
 		if (Math.random() < spawnChance) {
 			
-			int assRadius = 20;
 			
-			int x = GameWidth/4;
-			int minY = GameWidth/2;
-			int maxY = GameWidth/2;
-			int y = (int) (Math.random() * (maxY - minY) + minY); 
 			
-			if (Math.random() < 0.5) {
-				int temp = x;
-				x = y;
-				y = temp;
-			}
-			if (Math.random() < 0.5) x = maxY - x;
-			if (Math.random() < 0.5) y = maxY - y;
-			
-			Asteriod ass = new Asteriod(x, y, assRadius, GameWidth / 2, GameHeight / 2);
-			ass.addSpin((float) (Math.random() / 3) * (Math.random() < 0.5 ? 1 : -1));
-			mCharacters.add(ass);
 
-			int xDiff = (int) (earth.getPosition().x - x);
-			int yDiff = (int) (earth.getPosition().y - y);
+			float theta = (float) (Math.random()*Math.PI*2);
+			float height = (float) (ASTEROID_MIN_SPAWN_HEIGHT+Math.random()*(ASTEROID_MAX_SPAWN_HEIGHT - ASTEROID_MIN_SPAWN_HEIGHT));
+			Vector2f spawnPos = new Vector2f((float)(height*Math.cos(theta)), (float)(height*Math.sin(theta)));
 			
-			ass.addScaledImpulse(yDiff, xDiff, 120);
+			AsteroidSpawnEvent ase = new AsteroidSpawnEvent(Vector2f.add(spawnPos, earth.getPosition()), this);
+			AsteroidWarning aw = new AsteroidWarning(Vector2f.add(spawnPos, earth.getPosition()), ASS_RADIUS);
+			ArrayList<AbstractEvent> events = new ArrayList<AbstractEvent>();
+			events.add(ase);
+			guielems.add(aw);
+			events.add(new DeleteGUIElemEvent(this, aw));
+			Timer t = new Timer(120, events);
+			timers.add(t);
 			
 		}
 		
@@ -126,6 +135,12 @@ public class Main extends GameCore {
 			}
 		}
 		
+		// gravity
+		
+		for (AbstractCharacter c : mCharacters) {
+			if (!c.equals(earth)) c.applyGravity(earth.getPosition().x, earth.getPosition().y);
+		}
+		
 		// Control player
 		
 		boolean[] keys = window.input.getKeys();
@@ -134,6 +149,19 @@ public class Main extends GameCore {
 		if (keys[GLFW.GLFW_KEY_A]) player.addEngineSpin( 1);
 		if (keys[GLFW.GLFW_KEY_D]) player.addEngineSpin(-1);
 		
+		// decrement timers
+		for(Timer t : timers) {
+			t.decrement();
+		}
+		
+	}
+	
+	public Vector2f getEarthPos(){
+		return earth.getPosition();
+	}
+	
+	public void spawnCharacter(AbstractCharacter c) {
+		mCharacters.add(c);
 	}
 }
 

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.blade2d.drawelements.AbstractDrawElem;
 import com.blade2d.drawelements.TriElem;
 import com.blade2d.drawelements.Vertex;
+import com.spacegame.main.Main;
+import com.spacegame.physics.Vector2f;
 
 public class Asteriod extends AbstractCharacter {
 	
@@ -15,7 +17,7 @@ public class Asteriod extends AbstractCharacter {
 	
 	public Asteriod (int x, int y, int size, int aimX, int aimY) {
 		super(x, y, size);
-		mWeight = 33;
+		mWeight = 5;
 		mEngineImpulse = 1f;
 		
 		mAimX = aimX; mAimY = aimY;
@@ -35,7 +37,7 @@ public class Asteriod extends AbstractCharacter {
 			double maxAngle = Math.PI * 2.0 / numSides * (1+angleVariance);
 			currAngle += Math.random() * (maxAngle - minAngle) + minAngle;
 			
-			double sizeVariance = 0.15;
+			double sizeVariance = 0.2;
 			double minLength = size * (1-sizeVariance);
 			double maxLength = size * (1+sizeVariance);
 			currLength = (float) (Math.random() * (maxLength - minLength) + minLength);
@@ -57,7 +59,7 @@ public class Asteriod extends AbstractCharacter {
 		
 		// Propel to the planet!
 		
-		addEngineDirection(mAimX - mX, mAimY - mY);
+
 		
 		// Drawing stuff
 		mShapes.clear();

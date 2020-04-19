@@ -3,6 +3,7 @@ package com.spacegame.characters;
 import java.util.ArrayList;
 
 import com.blade2d.drawelements.AbstractDrawElem;
+import com.spacegame.main.Main;
 import com.spacegame.physics.Vector2f;
 
 public abstract class AbstractCharacter {
@@ -131,6 +132,14 @@ public abstract class AbstractCharacter {
 		return true;
 		}
 		return false;
+	}
+	
+	public void applyGravity(float mAimX, float mAimY) {
+		
+		Vector2f grav = new Vector2f(mAimX - mX, mAimY - mY);
+		grav = Vector2f.scale(grav, (float) (Main.GRAVITY_CONST/Math.pow(Vector2f.magnitude(grav),2)));
+		addImpulse(grav.x*mWeight, grav.y*mWeight);
+		
 	}
 	
 	public float getWeight() {return mWeight;}
