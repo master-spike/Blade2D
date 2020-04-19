@@ -29,7 +29,7 @@ public class Vector2f {
 	}
 	
 	public static Vector2f normalise(Vector2f v) {
-		return Vector2f.scale(v, magnitude(v));
+		return Vector2f.scale(v, 1f/magnitude(v));
 	}
 	
 }

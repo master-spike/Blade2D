@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import com.blade2d.drawelements.AbstractDrawElem;
 import com.blade2d.drawelements.TriElem;
 import com.blade2d.drawelements.Vertex;
+import com.spacegame.guielems.ExplodingAsteriod;
+import com.spacegame.main.Main;
+import com.spacegame.physics.Vector2f;
 
 public class Asteriod extends AbstractCharacter {
 	
@@ -55,17 +58,14 @@ public class Asteriod extends AbstractCharacter {
 			mY = Float.POSITIVE_INFINITY;
 		}
 		
-		// Propel to the planet!
-		
-
-		
 		// Drawing stuff
 		mShapes.clear();
 		
 		float r = 0.9f, g = 0.8f, b = 0.4f;
 		Vertex prev = mVertices.get(mVertices.size()-1);
 		for (Vertex curr: mVertices) {
-			TriElem tri = new TriElem(mX, mY, mX+prev.x, mY+prev.y, mX+curr.x, mY+curr.y, r, g, b, 1.0f, 10);
+			TriElem tri;
+			tri = new TriElem(mX, mY, mX+prev.x, mY+prev.y, mX+curr.x, mY+curr.y, r, g, b, 1.0f, 10);
 			mShapes.add(tri);
 			prev = curr;
 		}
@@ -74,6 +74,12 @@ public class Asteriod extends AbstractCharacter {
 		for (AbstractDrawElem shape : mShapes) {
 			shape.rotate(centre, mRotation);
 		}
+	}
+	
+	public void onCollide() {
+		Main.instance.guielems.add(new ExplodingAsteriod((int) mX, (int) mY, mVertices));
+		mX = Float.POSITIVE_INFINITY;
+		mY = Float.POSITIVE_INFINITY;
 	}
 
 }

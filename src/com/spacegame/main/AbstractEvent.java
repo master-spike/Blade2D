@@ -8,6 +8,10 @@ public abstract class AbstractEvent {
 		main = m;
 	}
 	
+	public AbstractEvent() {
+		main = Main.instance;
+	}
+
 	abstract void trigger();
 
 }

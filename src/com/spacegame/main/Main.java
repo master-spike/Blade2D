@@ -19,13 +19,15 @@ import com.spacegame.physics.Vector2f;
 
 public class Main extends GameCore {
 	
+	public static Main instance;
+	
 	private ArrayList<AbstractCharacter> mCharacters;
 	private AbstractCharacter player;
 	private AbstractCharacter earth;
 	private SideBar mSideBar;
 	
-	ArrayList<AbstractGUIElem> guielems;
-	ArrayList<Timer> timers;
+	public ArrayList<AbstractGUIElem> guielems;
+	public ArrayList<Timer> timers;
 	
 	// CONSTS
 	
@@ -45,6 +47,7 @@ public class Main extends GameCore {
 
 	public Main(int w, int h, String t, int r) {
 		super(w, h, t, r);
+		instance = this;
 	}
 
 	protected void init() {
@@ -114,13 +117,7 @@ public class Main extends GameCore {
 			
 			AsteroidSpawnEvent ase = new AsteroidSpawnEvent(Vector2f.add(spawnPos, earth.getPosition()), this);
 			AsteroidWarning aw = new AsteroidWarning(Vector2f.add(spawnPos, earth.getPosition()), ASS_RADIUS);
-			ArrayList<AbstractEvent> events = new ArrayList<AbstractEvent>();
-			events.add(ase);
 			guielems.add(aw);
-			events.add(new DeleteGUIElemEvent(this, aw));
-			Timer t = new Timer(ASTEROID_SPAWN_WARNING_TIME, events);
-			timers.add(t);
-			
 		}
 		
 		// Collisions
@@ -137,6 +134,8 @@ public class Main extends GameCore {
 					Vect2fPair ans = PhysicsCalc.getElasticCollision(m1, m2);
 					c1.addImpulse(ans.v1.x, ans.v1.y);
 					c2.addImpulse(ans.v2.x, ans.v2.y);
+					c1.onCollide();
+					c2.onCollide();
 				}
 			}
 		}

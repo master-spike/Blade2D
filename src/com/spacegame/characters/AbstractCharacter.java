@@ -139,6 +139,8 @@ public abstract class AbstractCharacter {
 		
 	}
 	
+	public void onCollide() {};
+	
 	public float getWeight() {return mWeight;}
 	public Vector2f getVelocity() {return new Vector2f(mMomentumX / mWeight, mMomentumY / mWeight);}
 	public Vector2f getPosition() {return new Vector2f(mX, mY);}

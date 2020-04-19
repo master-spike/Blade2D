@@ -12,6 +12,11 @@ public class AsteroidSpawnEvent extends AbstractEvent {
 		this.position = p;
 	}
 
+	public AsteroidSpawnEvent(Vector2f p) {
+		super();
+		position = p;
+	}
+
 	void trigger() {
 		
 		Asteriod ass = new Asteriod((int)position.x, (int)position.y, Main.ASS_RADIUS, main.GameWidth / 2, main.GameHeight / 2);

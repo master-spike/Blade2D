@@ -1,6 +1,11 @@
 package com.spacegame.guielems;
 
 import com.blade2d.drawelements.LineElem;
+import com.spacegame.main.AbstractEvent;
+import com.spacegame.main.AsteroidSpawnEvent;
+import com.spacegame.main.DeleteGUIElemEvent;
+import com.spacegame.main.DeleteGUIElemTimer;
+import com.spacegame.main.Main;
 import com.spacegame.main.Timer;
 import com.spacegame.physics.Vector2f;
 
@@ -13,6 +18,15 @@ public class AsteroidWarning extends AbstractGUIElem{
 	public AsteroidWarning(Vector2f p, float s) {
 		position = p;
 		size = s;
+		
+		Timer t = new Timer(Main.ASTEROID_SPAWN_WARNING_TIME);
+		
+		AbstractEvent e1 = new DeleteGUIElemEvent(this);
+		t.addEvent(e1);
+		AbstractEvent e2 = new AsteroidSpawnEvent(p);
+		t.addEvent(e2);
+		
+		t.start();
 	}
 	
 	public void update() {
