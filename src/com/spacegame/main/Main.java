@@ -8,6 +8,7 @@ import com.blade2d.drawelements.AbstractDrawElem;
 import com.blade2d.drawelements.LineElem;
 import com.blade2d.engine.GameCore;
 import com.spacegame.characters.AbstractCharacter;
+import com.spacegame.characters.Asteriod;
 import com.spacegame.characters.Najeeb;
 
 public class Main extends GameCore {
@@ -30,13 +31,17 @@ public class Main extends GameCore {
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
 		
-		player = new Najeeb(GameWidth/2, GameHeight/2, 60, GameWidth, GameHeight);
+		player = new Najeeb(GameWidth/2, GameHeight/2, 20, GameWidth, GameHeight);
 		mCharacters.add(player);
 		
 		int numStars = 100;
 		for (int i = 0; i != numStars; i++) {
 			mStars.add(new Star((int) (Math.random() * GameWidth), (int) (Math.random() * GameHeight)));
 		}
+		
+		Asteriod ass = new Asteriod(50, 50, 20, GameWidth / 2, GameHeight / 2);
+		ass.addSpin(0.3f);
+		mCharacters.add(ass);
 	}
 
 	protected boolean toTerminate() {
@@ -68,8 +73,8 @@ public class Main extends GameCore {
 		boolean[] keys = window.input.getKeys();
 		if (keys[GLFW.GLFW_KEY_W]) player.addFowardImpulse( 1);
 		if (keys[GLFW.GLFW_KEY_S]) player.addFowardImpulse(-1);
-		if (keys[GLFW.GLFW_KEY_D]) player.addSpin( 1);
-		if (keys[GLFW.GLFW_KEY_A]) player.addSpin(-1);
+		if (keys[GLFW.GLFW_KEY_A]) player.addEngineSpin( 1);
+		if (keys[GLFW.GLFW_KEY_D]) player.addEngineSpin(-1);
 		
 	}
 	
@@ -97,7 +102,7 @@ class Star {
 		
 		float r = 1.0f, g = 0.0f, b = 1.0f, a = 1.0f;
 		
-		return new LineElem(mX, mY, mX+xDist, mY+yDist, r, g, b, a, 0);
+		return new LineElem(mX, mY, mX+xDist, mY+yDist, r, g, b, a, -10000);
 	}
 }
 

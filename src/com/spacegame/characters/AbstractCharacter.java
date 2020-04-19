@@ -6,6 +6,9 @@ import com.blade2d.drawelements.AbstractDrawElem;
 
 public abstract class AbstractCharacter {
 	
+	protected float mSpinSlowFactor;
+	protected float mMoveSlowFactor;
+	
 	protected float mSize;
 	protected float mRotation;
 	
@@ -25,6 +28,7 @@ public abstract class AbstractCharacter {
 		mSize = size;
 		mMomentumX = mMomentumY = 0;
 		mSpinMomentum = 0;
+		mMoveSlowFactor = mSpinSlowFactor = 1f;
 		mShapes = new ArrayList<AbstractDrawElem>();
 	}
 	protected boolean mHidden;
@@ -51,11 +55,16 @@ public abstract class AbstractCharacter {
 	}
 	
 	public void addImpulse(float x, float y) {
-		if (mWeight == 0) {
+		if (mWeight == 0)
 			System.err.println("Tried to speed up when weightless!");
-		}
 		mMomentumX += x;
 		mMomentumY += y;
+	}
+	
+	public void addSpin(float spin) {
+		if (mWeight == 0)
+			System.err.println("Tried to spin up when weightless!");
+		mSpinMomentum += spin;
 	}
 	
 	public void addFowardImpulse(float mag) {
@@ -64,7 +73,7 @@ public abstract class AbstractCharacter {
 		addImpulse(x, y);
 	}
 	
-	public void addSpin(float spin) {
+	public void addEngineSpin(float spin) {
 		mNewSpinImpulse += spin;
 	}
 	
@@ -80,10 +89,12 @@ public abstract class AbstractCharacter {
 	public void update() {
 		
 		double newImpulseMagnitude = Math.sqrt(Math.pow(mNewImpulseX, 2) + Math.pow(mNewImpulseY, 2));
-		double s = newImpulseMagnitude / mEngineImpulse;
-		if (s != 0) {
-			mMomentumX += mNewImpulseX / s;
-			mMomentumY += mNewImpulseY / s;
+		if (mEngineImpulse != 0) {
+			double s = newImpulseMagnitude / mEngineImpulse;
+			if (s != 0) {
+				mMomentumX += mNewImpulseX / s;
+				mMomentumY += mNewImpulseY / s;
+			}
 		}
 		if (mNewSpinImpulse != 0)
 			mSpinMomentum += ((mNewSpinImpulse > 0) ? 1 : -1) * mSpinImpulse;
@@ -94,9 +105,9 @@ public abstract class AbstractCharacter {
 		mX += mMomentumX / mWeight;
 		mY += mMomentumY / mWeight;
 		mRotation += mSpinMomentum;
-		mSpinMomentum *= SPINSLOWFACTOR;
-		mMomentumX *= MOVESLOWFACTOR;
-		mMomentumY *= MOVESLOWFACTOR;
+		mSpinMomentum *= mSpinSlowFactor;
+		mMomentumX *= mMoveSlowFactor;
+		mMomentumY *= mMoveSlowFactor;
 		
 
 		mNewImpulseX = mNewImpulseY = mNewSpinImpulse = 0;
