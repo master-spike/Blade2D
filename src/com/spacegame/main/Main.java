@@ -15,6 +15,7 @@ import com.spacegame.characters.Earth;
 import com.spacegame.characters.Najeeb;
 import com.spacegame.guielems.AbstractGUIElem;
 import com.spacegame.guielems.AsteroidWarning;
+import com.spacegame.guielems.GameOver;
 import com.spacegame.guielems.HealthDecreaseIndicator;
 import com.spacegame.guielems.Healthbar;
 import com.spacegame.guielems.ScoreMeter;
@@ -37,6 +38,8 @@ public class Main extends GameCore {
 	public ArrayList<Timer> timers;
 
 	// CONSTS
+	
+	public static final boolean TEST = true;
 
 	public static final float GRAVITY_CONST = 4000;
 	public static final float ASTEROID_MIN_SPAWN_HEIGHT = 190;
@@ -63,7 +66,12 @@ public class Main extends GameCore {
 	
 	private int score;
 
-	private boolean paused;
+	public int pauseStatus;
+	public static final int UNPAUSED = 0;
+	public static final int PAUSED = 1;
+	public static final int ENDED = 2;
+	public static final int RESTARTED = 3;
+	public static final int SHUTDOWN = 2;
 	
 	ArrayList<AbstractDrawElem> pausemenu;
 	
@@ -85,7 +93,7 @@ public class Main extends GameCore {
 		immediate_events = new ArrayList<AbstractEvent>();
 		timers = new ArrayList<Timer>();
 		hp = MAX_HP;
-		paused = false;
+		pauseStatus = UNPAUSED;
 		score = 0;
 		keysPrevious = new boolean[window.input.getKeys().length];
 		
@@ -102,22 +110,22 @@ public class Main extends GameCore {
 			mStars.add(new Star((int) (Math.random() * GameWidth), (int) (Math.random() * GameHeight)));
 		}
 
-		guielems.add(new Healthbar(100, 10, 334, 300, 1, 0f, 0f, 0f, 0f, 0f, 0f, MAX_HP / 3, (2 * MAX_HP) / 3));
-		guielems.add(new ScoreMeter());
+		addGUIElem(new Healthbar(100, 10, 334, 300, 1, 0f, 0f, 0f, 0f, 0f, 0f, MAX_HP / 3, (2 * MAX_HP) / 3));
+		addGUIElem(new ScoreMeter());
 
 		earth = new Earth(GameWidth / 2, GameHeight / 2, EARTH_RADIUS);
 		mCharacters.add(earth);
 		
 		// start the player at an orbital velocity
 		Vector2f spawnDir = Vector2f.subtract(earth.getPosition(), player.getPosition());
-		Vector2f impulse = Vector2f.scale(player.getGravityForce(Main.instance.getEarthPos().x, Main.instance.getEarthPos().y), 
+		Vector2f impulse = Vector2f.scale(player.getGravityForce(getEarthPos().x, getEarthPos().y), 
 											Vector2f.magnitude(spawnDir) * player.getWeight());
 		impulse = Vector2f.scale(Vector2f.normalise(impulse), (float) Math.sqrt(Vector2f.magnitude(impulse)));
 		player.addImpulse(impulse.y, -impulse.x);
 	}
 
 	protected boolean toTerminate() {
-		return super.window.shouldClose();
+		return super.window.shouldClose() || pauseStatus >= RESTARTED;
 	}
 	
 	boolean[] keysPrevious;
@@ -126,6 +134,8 @@ public class Main extends GameCore {
 		
 		// clear expired sounds
 		audio.checkSources();
+		// get keys presses
+		boolean[] keys = window.input.getKeys();
 
 		// Do drawing
 
@@ -142,10 +152,8 @@ public class Main extends GameCore {
 			super.draw_elems.addAll(g.getShape());
 		}
 		
-		
-		
 		// do this only if not paused
-		if (!paused) {
+		if (pauseStatus == UNPAUSED) {
 			// update game elements
 			for (AbstractGUIElem g : guielems) {
 				g.update();
@@ -157,9 +165,20 @@ public class Main extends GameCore {
 				s.update();
 			}
 
+			// Control player
+
+			if (keys[GLFW.GLFW_KEY_W])
+				player.addFowardImpulse(1);
+			if (keys[GLFW.GLFW_KEY_S])
+				player.addFowardImpulse(-1);
+			if (keys[GLFW.GLFW_KEY_A])
+				player.addEngineSpin(1);
+			if (keys[GLFW.GLFW_KEY_D])
+				player.addEngineSpin(-1);
+
 			// Spawn asteroids
 
-			if (Math.random() < ASTEROID_SPAWN_CHANCE_PER_FRAME) {
+			if (Math.random() < ASTEROID_SPAWN_CHANCE_PER_FRAME || (TEST && keys[GLFW.GLFW_KEY_Q])) {
 
 				float theta = (float) (Math.random() * Math.PI * 2);
 				float height = (float) (ASTEROID_MIN_SPAWN_HEIGHT
@@ -169,17 +188,16 @@ public class Main extends GameCore {
 
 				AsteroidSpawnEvent ase = new AsteroidSpawnEvent(Vector2f.add(spawnPos, earth.getPosition()));
 				AsteroidWarning aw = new AsteroidWarning(Vector2f.add(spawnPos, earth.getPosition()), ASS_RADIUS);
-				PlaySoundEvent pse = new PlaySoundEvent(SFIND_ALARM);
-				guielems.add(aw);
+				addGUIElem(aw);
 				DeleteGUIElemEvent del = new DeleteGUIElemEvent(aw);
 				Timer t = new Timer(Main.ASTEROID_SPAWN_WARNING_TIME);
-				
-				immediate_events.add(pse);
 
 				t.addEvent(ase);
 				t.addEvent(del);
 
 				t.start();
+				
+				playSound(SFIND_ALARM);
 			}
 
 			// Collisions
@@ -200,8 +218,7 @@ public class Main extends GameCore {
 						
 						// threshhold for collision strength to determine whether the sound plays
 						if(Vector2f.magnitude(ans.v1)/c1.getWeight() + Vector2f.magnitude(ans.v2)/c2.getWeight() > 1.6f) {
-							PlaySoundEvent pse = new PlaySoundEvent(Main.SFIND_COLLISION_1);
-							Main.instance.immediate_events.add(pse);
+							playSound(Main.SFIND_COLLISION_1);
 						}
 					}
 				}
@@ -211,24 +228,25 @@ public class Main extends GameCore {
 			// of impact
 			for (AbstractCharacter c : mCharacters) {
 				if (c.getClass() == Asteroid.class && c.hasCollided(earth)) {
-					immediate_events.add(new AsteroidExplodeEvent((Asteroid) c));
+					addEvent(new AsteroidExplodeEvent((Asteroid) c));
+					
 					int r = (int) (Vector2f.magnitude(c.getMomentum()));
-					immediate_events.add(new ReduceHPEvent(r));
+					addEvent(new ReduceHPEvent(r));
+					
 					HealthDecreaseIndicator hdind =  new HealthDecreaseIndicator(c.getPosition().x, c.getPosition().y, r);
-					guielems.add(hdind);
-					Timer hdind_timer = new Timer(HealthDecreaseIndicator.DURATION);
-					hdind_timer.addEvent(new DeleteGUIElemEvent(hdind));
-					hdind_timer.start();
+					addGUIElem(hdind, HealthDecreaseIndicator.DURATION);
 				}
 			}
 			
 		
 			
 			// trigger all immediate (non-timed) events and clear the list (to avoid re-triggering)
-			for (AbstractEvent e : immediate_events) {
+			ArrayList<AbstractEvent> cached = new ArrayList<AbstractEvent>();
+			cached.addAll(immediate_events);
+			immediate_events.clear();
+			for (AbstractEvent e : cached) {
 				e.trigger();
 			}
-			immediate_events.clear();
 
 			// gravity
 
@@ -237,18 +255,6 @@ public class Main extends GameCore {
 					c.applyGravity(earth.getPosition().x, earth.getPosition().y);
 			}
 
-			// Control player
-
-			boolean[] keys = window.input.getKeys();
-			if (keys[GLFW.GLFW_KEY_W])
-				player.addFowardImpulse(1);
-			if (keys[GLFW.GLFW_KEY_S])
-				player.addFowardImpulse(-1);
-			if (keys[GLFW.GLFW_KEY_A])
-				player.addEngineSpin(1);
-			if (keys[GLFW.GLFW_KEY_D])
-				player.addEngineSpin(-1);
-
 			// decrement timers
 			for (Timer t : timers) {
 				t.decrement();
@@ -256,22 +262,29 @@ public class Main extends GameCore {
 			
 			// Check pause button pressed
 			if (keys[GLFW.GLFW_KEY_SPACE] && !keysPrevious[GLFW.GLFW_KEY_SPACE]) {
-				paused = true;
+				pauseStatus = PAUSED;
 				System.out.println();
 			}
 			
 			
 		}
-		else {
+		else if (pauseStatus == PAUSED) {
 			super.draw_elems.addAll(pausemenu);
-			if (window.input.getKeys()[GLFW.GLFW_KEY_ESCAPE] && !keysPrevious[GLFW.GLFW_KEY_ESCAPE]) {
-				terminate();
+			if (keys[GLFW.GLFW_KEY_ESCAPE] && !keysPrevious[GLFW.GLFW_KEY_ESCAPE]) {
+				endGame();
 			}
-			if (window.input.getKeys()[GLFW.GLFW_KEY_SPACE] && !keysPrevious[GLFW.GLFW_KEY_SPACE]) {
-				paused = false;
+			if (keys[GLFW.GLFW_KEY_SPACE] && !keysPrevious[GLFW.GLFW_KEY_SPACE]) {
+				pauseStatus = UNPAUSED;
 			}
+		} else {
+			
 		}
-		keysPrevious = window.input.getKeys().clone();
+
+		if (keys[GLFW.GLFW_KEY_R]) {
+			restartGame();
+		}
+		
+		keysPrevious = keys.clone();
 
 	}
 
@@ -292,6 +305,25 @@ public class Main extends GameCore {
 	}
 	public void increaseScore(int amount) {
 		score += amount;
+	}
+	
+	public void addTimer(Timer t) {timers.add(t);}
+	public void addEvent(AbstractEvent e) {immediate_events.add(e);}
+	public void addGUIElem(AbstractGUIElem e) {guielems.add(e);}
+	public void addGUIElem(AbstractGUIElem e, int i) {
+		addGUIElem(e);
+		Timer t = new Timer(i);
+		t.addEvent(new DeleteGUIElemEvent(e));
+		t.start();
+	}
+	public void playSound(int i) {
+		addEvent(new PlaySoundEvent(i));
+	}
+	public void endGame() {
+		pauseStatus = SHUTDOWN;
+	}
+	public void restartGame() {
+		pauseStatus = RESTARTED;
 	}
 }
 
