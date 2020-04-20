@@ -187,7 +187,7 @@ public class Main extends GameCore {
 
 			// Spawn asteroids
 			
-			float spawnChance = (mNumAsteroids <= 2) ? 0.05f:0.02f;
+			float spawnChance = (mNumAsteroids <= 2) ? 0.005f:0.002f;
 
 			if (Math.random() < spawnChance || (TEST && keys[GLFW.GLFW_KEY_Q])) {
 				spawnAsteroid();
