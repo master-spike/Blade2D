@@ -84,14 +84,12 @@ public class Asteroid extends AbstractCharacter {
 			}
 			
 			ScoreUpIndicator sui = new ScoreUpIndicator(ind_x,ind_y,1);
-			Timer ind_t = new Timer(ScoreUpIndicator.DURATION);
-			ind_t.addEvent(new DeleteGUIElemEvent(sui));
+			Main.instance.addEvent(new DeleteGUIElemEvent(sui), ScoreUpIndicator.DURATION);
 			
-			Main.instance.guielems.add(sui);
-			Main.instance.timers.add(ind_t);
-			Main.instance.immediate_events.add(ise);
-			Main.instance.immediate_events.add(despawn_this);
-			Main.instance.immediate_events.add(new PlaySoundEvent(Main.SFIND_SCORE_UP));
+			Main.instance.addGUIElem(sui);
+			Main.instance.addEvent(ise);
+			Main.instance.addEvent(despawn_this);
+			Main.instance.playSound(Main.SFIND_SCORE_UP);
 		}
 		
 		// Drawing stuff

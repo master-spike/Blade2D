@@ -325,6 +325,12 @@ public class Main extends GameCore {
 	public void restartGame() {
 		pauseStatus = RESTARTED;
 	}
+
+	public void addEvent(DeleteGUIElemEvent e, int duration) {
+		Timer t = new Timer(duration);
+		t.addEvent(e);
+		t.start();
+	}
 }
 
 class Star {
