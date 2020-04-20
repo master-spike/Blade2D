@@ -196,8 +196,12 @@ public class Main extends GameCore {
 						Vect2fPair ans = PhysicsCalc.getElasticCollision(m1, m2);
 						c1.addImpulse(ans.v1.x, ans.v1.y);
 						c2.addImpulse(ans.v2.x, ans.v2.y);
-						c1.onCollide();
-						c2.onCollide();
+						
+						// threshhold for collision strength to determine whether the sound plays
+						if(Vector2f.magnitude(ans.v1)/c1.getWeight() + Vector2f.magnitude(ans.v2)/c2.getWeight() > 1.6f) {
+							PlaySoundEvent pse = new PlaySoundEvent(Main.SFIND_COLLISION_1);
+							Main.instance.immediate_events.add(pse);
+						}
 					}
 				}
 			}

@@ -151,8 +151,7 @@ public abstract class AbstractCharacter {
 	}
 	
 	public void onCollide() {
-		PlaySoundEvent pse = new PlaySoundEvent(Main.SFIND_COLLISION_1);
-		Main.instance.immediate_events.add(pse);
+
 	}
 	
 	public float getWeight() {return mWeight;}
