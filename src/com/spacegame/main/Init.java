@@ -18,7 +18,9 @@ public class Init {
 		game.audio = audio;
 		game.soundbank = soundbank;
 		
-		game.Start();
+		do {
+			game.Start();
+		} while (game.pauseStatus == Main.RESTARTED);
 		
 		audio.destroy();
 		

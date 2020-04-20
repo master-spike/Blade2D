@@ -10,7 +10,10 @@ public class ReduceHPEvent  extends AbstractEvent {
 	
 	public void trigger() {
 		Main.instance.hp -= r;
-		if (Main.instance.hp < 0) Main.instance.hp = 0;
+		if (Main.instance.hp < 0) {
+			Main.instance.hp = 0;
+			Main.instance.addEvent(new GameOverEvent(Main.instance.getScore()));
+		}
 	}
 	
 	
