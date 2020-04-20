@@ -50,6 +50,7 @@ public class Main extends GameCore {
 	public static final int EARTH_RADIUS = 70;
 	public static final int NUM_STARS = 200;
 	public static final int MAX_HP = 1000;
+	public static final int IDEAL_ASTEROID_COUNT = 10;
 
 	
 	// Soundbank index constants
@@ -60,6 +61,8 @@ public class Main extends GameCore {
 	public static final int SFIND_EXPLOSION_2 = 4;
 	
 	public int GameWidth, GameHeight, SideBarWidth;
+	
+	public int mNumAsteroids;
 
 	private ArrayList<Star> mStars;
 
@@ -181,27 +184,12 @@ public class Main extends GameCore {
 				player.addEngineSpin(-1);
 
 			// Spawn asteroids
+			
+			float spawnChance = ASTEROID_SPAWN_CHANCE_PER_FRAME + 
+					(1-ASTEROID_SPAWN_CHANCE_PER_FRAME) * Math.max(IDEAL_ASTEROID_COUNT - countAsteroids(), 0);
 
-			if (Math.random() < ASTEROID_SPAWN_CHANCE_PER_FRAME || (TEST && keys[GLFW.GLFW_KEY_Q])) {
-
-				float theta = (float) (Math.random() * Math.PI * 2);
-				float height = (float) (ASTEROID_MIN_SPAWN_HEIGHT
-						+ Math.random() * (ASTEROID_MAX_SPAWN_HEIGHT - ASTEROID_MIN_SPAWN_HEIGHT));
-				Vector2f spawnPos = new Vector2f((float) (height * Math.cos(theta)),
-						(float) (height * Math.sin(theta)));
-
-				AsteroidSpawnEvent ase = new AsteroidSpawnEvent(Vector2f.add(spawnPos, earth.getPosition()));
-				AsteroidWarning aw = new AsteroidWarning(Vector2f.add(spawnPos, earth.getPosition()), ASS_RADIUS);
-				addGUIElem(aw);
-				DeleteGUIElemEvent del = new DeleteGUIElemEvent(aw);
-				Timer t = new Timer(Main.ASTEROID_SPAWN_WARNING_TIME);
-
-				t.addEvent(ase);
-				t.addEvent(del);
-
-				t.start();
-				
-				playSound(SFIND_ALARM);
+			if (Math.random() < spawnChance || (TEST && keys[GLFW.GLFW_KEY_Q])) {
+				spawnAsteroid();
 			}
 
 			// Collisions
@@ -230,8 +218,8 @@ public class Main extends GameCore {
 
 			// explode asteroids colliding into Earth, and reduce hp by energy
 			// of impact
-			for (AbstractCharacter c : mCharacters) {
-				if (c.getClass() == Asteroid.class && c.hasCollided(earth)) {
+			for (AbstractCharacter c : getCharacters(Asteroid.class)) {
+				if (c.hasCollided(earth)) {
 					addEvent(new AsteroidExplodeEvent((Asteroid) c));
 					
 					int r = (int) (Vector2f.magnitude(c.getMomentum()));
@@ -336,14 +324,39 @@ public class Main extends GameCore {
 		t.start();
 	}
 	
-	public int countAsteroids() {
-		int counter = 0;
+	public ArrayList<AbstractCharacter> getCharacters(Class<?> type) {
+		ArrayList<AbstractCharacter> ans = new ArrayList<AbstractCharacter>();
 		for (AbstractCharacter c : mCharacters) {
-			if (c.getClass() == Asteroid.class) counter++;
+			if (c.getClass() == Asteroid.class) ans.add(c);
 		}
+		return ans;
+	}
+	
+	public int countAsteroids() {
+		return mNumAsteroids; 		
+	}
+	
+	public void spawnAsteroid() {
+
+		float theta = (float) (Math.random() * Math.PI * 2);
+		float height = (float) (ASTEROID_MIN_SPAWN_HEIGHT
+				+ Math.random() * (ASTEROID_MAX_SPAWN_HEIGHT - ASTEROID_MIN_SPAWN_HEIGHT));
+		Vector2f spawnPos = new Vector2f((float) (height * Math.cos(theta)),
+				(float) (height * Math.sin(theta)));
+
+		AsteroidSpawnEvent ase = new AsteroidSpawnEvent(Vector2f.add(spawnPos, earth.getPosition()));
+		AsteroidWarning aw = new AsteroidWarning(Vector2f.add(spawnPos, earth.getPosition()), ASS_RADIUS);
+		addGUIElem(aw);
+		DeleteGUIElemEvent del = new DeleteGUIElemEvent(aw);
+		Timer t = new Timer(Main.ASTEROID_SPAWN_WARNING_TIME);
+
+		t.addEvent(ase);
+		t.addEvent(del);
+
+		t.start();
 		
-		return counter; 
-		
+		playSound(SFIND_ALARM);
+		mNumAsteroids++;
 	}
 }
 
