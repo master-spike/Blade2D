@@ -331,6 +331,16 @@ public class Main extends GameCore {
 		t.addEvent(e);
 		t.start();
 	}
+	
+	public int countAsteroids() {
+		int counter = 0;
+		for (AbstractCharacter c : mCharacters) {
+			if (c.getClass() == Asteroid.class) counter++;
+		}
+		
+		return counter; 
+		
+	}
 }
 
 class Star {
