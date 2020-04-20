@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import com.blade2d.drawelements.AbstractDrawElem;
 import com.blade2d.drawelements.TriElem;
 import com.blade2d.drawelements.Vertex;
+import com.spacegame.guielems.ScoreUpIndicator;
 import com.spacegame.main.AsteroidDespawnEvent;
+import com.spacegame.main.DeleteGUIElemEvent;
 import com.spacegame.main.IncreaseScoreEvent;
 import com.spacegame.main.Main;
+import com.spacegame.main.PlaySoundEvent;
+import com.spacegame.main.Timer;
 
 public class Asteroid extends AbstractCharacter {
 	
@@ -64,9 +68,30 @@ public class Asteroid extends AbstractCharacter {
 		if (Math.abs(mAimX - mX) > mAimX || Math.abs(mAimY - mY) > mAimY) {
 			AsteroidDespawnEvent despawn_this = new AsteroidDespawnEvent(this);
 			IncreaseScoreEvent ise = new IncreaseScoreEvent(1);
+			float ind_x = mX;
+			float ind_y = mY;
+			if (mX < 50) {
+				ind_x = 50;
+			}
+			else if (mX > 2*mAimX - 50) {
+				ind_x = 2*mAimX - 50;
+			}
+			if (mY < 50) {
+				ind_y = 50;
+			}
+			else if (mY > 2*mAimY - 50) {
+				ind_y = 2*mAimY - 50;
+			}
 			
+			ScoreUpIndicator sui = new ScoreUpIndicator(ind_x,ind_y,1);
+			Timer ind_t = new Timer(ScoreUpIndicator.DURATION);
+			ind_t.addEvent(new DeleteGUIElemEvent(sui));
+			
+			Main.instance.guielems.add(sui);
+			Main.instance.timers.add(ind_t);
 			Main.instance.immediate_events.add(ise);
 			Main.instance.immediate_events.add(despawn_this);
+			Main.instance.immediate_events.add(new PlaySoundEvent(3));
 		}
 		
 		// Drawing stuff
