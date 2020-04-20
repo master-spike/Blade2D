@@ -50,6 +50,7 @@ public class Main extends GameCore {
 
 	public static final int SFIND_EXPLOSION_1 = 0;
 	public static final int SFIND_COLLISION_1= 1;
+	public static final int SFIND_ALARM= 1;
 	
 	public int GameWidth, GameHeight, SideBarWidth;
 
@@ -81,6 +82,7 @@ public class Main extends GameCore {
 		
 		soundbank.load(0, "res/Explosion_1.ogg", 1000);
 		soundbank.load(1, "res/Collision_1.ogg", 1000);
+		soundbank.load(2, "res/Alarm.ogg", 1900);
 	}
 
 	protected void init() {
@@ -171,9 +173,12 @@ public class Main extends GameCore {
 
 				AsteroidSpawnEvent ase = new AsteroidSpawnEvent(Vector2f.add(spawnPos, earth.getPosition()));
 				AsteroidWarning aw = new AsteroidWarning(Vector2f.add(spawnPos, earth.getPosition()), ASS_RADIUS);
+				PlaySoundEvent pse = new PlaySoundEvent(2);
 				guielems.add(aw);
 				DeleteGUIElemEvent del = new DeleteGUIElemEvent(aw);
 				Timer t = new Timer(Main.ASTEROID_SPAWN_WARNING_TIME);
+				
+				immediate_events.add(pse);
 
 				t.addEvent(ase);
 				t.addEvent(del);

@@ -12,7 +12,6 @@ public class IncreaseScoreEvent extends AbstractEvent {
 	public void trigger() {
 		
 		Main.instance.increaseScore(increase);
-		System.out.println(increase);
 		
 	}
 
