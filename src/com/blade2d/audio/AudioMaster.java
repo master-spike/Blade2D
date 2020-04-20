@@ -11,36 +11,63 @@ import static org.lwjgl.openal.ALC10.*;
 public class AudioMaster {
 	String defaultDeviceName;
 	long device;
-	int[] attributes = {0};
+	int[] attributes = { 0 };
 	long context;
 	ALCCapabilities alcCapabilities;
-	ALCapabilities  alCapabilities;
+	ALCapabilities alCapabilities;
 	ShortBuffer rawAudioBuffer;
-	
+
+	int[] sources = new int[256];
+	long[] times = new long[256];
+
 	public void init() {
 		defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
 		device = alcOpenDevice(defaultDeviceName);
-		
+
 		context = alcCreateContext(device, attributes);
 		alcMakeContextCurrent(context);
 
 		alcCapabilities = ALC.createCapabilities(device);
 		alCapabilities = AL.createCapabilities(alcCapabilities);
-		
 
 	}
-	
-	public void play(Sound sound) {
+
+	// play a sound with duration in millis
+	public void playSound(Sound sound, int d) {
+		
+		long current_time = System.currentTimeMillis();
+		int ind = -1;
+		for (int i = 0; i < 256; i++) {
+			if (times[i] < current_time) {
+				ind = i;
+				break;
+			}
+		}
+		if (ind == -1) {
+			System.out.println("too many sources, failed to play sound");
+		}
+		
+		
 		int sourcePointer = alGenSources();
 
-		//Assign the sound we just loaded to the source
+		// Assign the sound to the sourceww
 		alSourcei(sourcePointer, AL_BUFFER, sound.bufferPointer);
-		
 
-		//Play the sound
+		// Play the sound
 		alSourcePlay(sourcePointer);
+
+		sources[ind] = sourcePointer;
+		times[ind] = current_time + d;
+
 	}
-	
+
+	public void checkSources() {
+		long current_time = System.currentTimeMillis();
+		for (int i = 0; i < 256; i++) {
+			if(times[i] < current_time) alDeleteSources(sources[i]);
+		}
+	}
+
 	public void destroy() {
 		alcDestroyContext(context);
 		alcCloseDevice(device);

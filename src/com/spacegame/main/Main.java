@@ -49,6 +49,7 @@ public class Main extends GameCore {
 	public static final int MAX_HP = 1000;
 
 	public static final int SFIND_EXPLOSION_1 = 0;
+	public static final int SFIND_COLLISION_1= 1;
 	
 	public int GameWidth, GameHeight, SideBarWidth;
 
@@ -78,7 +79,8 @@ public class Main extends GameCore {
 		audio.init();
 		soundbank = new SoundBank(20);
 		
-		soundbank.load(0, "res/explosion_1.ogg");
+		soundbank.load(0, "res/Explosion_1.ogg", 1000);
+		soundbank.load(1, "res/Collision_1.ogg", 1000);
 	}
 
 	protected void init() {
@@ -123,6 +125,9 @@ public class Main extends GameCore {
 	boolean[] keysPrevious;
 
 	protected void update() {
+		
+		// clear expired sounds
+		audio.checkSources();
 
 		// Do drawing
 

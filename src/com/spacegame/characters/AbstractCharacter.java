@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.blade2d.drawelements.AbstractDrawElem;
 import com.spacegame.main.Main;
+import com.spacegame.main.PlaySoundEvent;
 import com.spacegame.physics.Vector2f;
 
 public abstract class AbstractCharacter {
@@ -149,7 +150,10 @@ public abstract class AbstractCharacter {
 		return Vector2f.magnitude(Vector2f.add(getPosition(), Vector2f.scale(c.getPosition(), -1f)));
 	}
 	
-	public void onCollide() {};
+	public void onCollide() {
+		PlaySoundEvent pse = new PlaySoundEvent(Main.SFIND_COLLISION_1);
+		Main.instance.immediate_events.add(pse);
+	}
 	
 	public float getWeight() {return mWeight;}
 	public Vector2f getVelocity() {return new Vector2f(mMomentumX / mWeight, mMomentumY / mWeight);}
