@@ -118,6 +118,12 @@ public class Main extends GameCore {
 
 		earth = new Earth(GameWidth / 2, GameHeight / 2, EARTH_RADIUS);
 		mCharacters.add(earth);
+		
+		Vector2f spawnDir = Vector2f.subtract(earth.getPosition(), player.getPosition());
+		Vector2f impulse = Vector2f.scale(player.getGravityForce(Main.instance.getEarthPos().x, Main.instance.getEarthPos().y), 
+											Vector2f.magnitude(spawnDir) * player.getWeight());
+		impulse = Vector2f.scale(Vector2f.normalise(impulse), (float) Math.sqrt(Vector2f.magnitude(impulse)));
+		player.addImpulse(impulse.y, -impulse.x);
 	}
 
 	protected boolean toTerminate() {

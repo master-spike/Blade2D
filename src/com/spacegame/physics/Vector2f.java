@@ -13,6 +13,12 @@ public class Vector2f {
 		return new Vector2f(v1.x + v2.x, v1.y + v2.y);
 		
 	}
+	public static Vector2f negative(Vector2f v) {
+		return new Vector2f(-v.x, -v.y);
+	}
+	public static Vector2f subtract(Vector2f v1, Vector2f v2) {
+		return add(v1, negative(v2));
+	}
 	public static Vector2f scale(Vector2f v, float s) {
 		return new Vector2f(v.x*s, v.y*s);
 	}
