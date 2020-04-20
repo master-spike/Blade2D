@@ -10,6 +10,8 @@ public class AsteroidSpawnEvent extends AbstractEvent {
 	public AsteroidSpawnEvent(Vector2f p) {
 		this.position = p;
 	}
+	
+	private static final float ASTEROID_VEL_RANDOM_FACTOR = 1;
 
 	public void trigger() {
 		
@@ -22,11 +24,13 @@ public class AsteroidSpawnEvent extends AbstractEvent {
 		impulse = Vector2f.scale(Vector2f.normalise(impulse), (float) Math.sqrt(Vector2f.magnitude(impulse)));
 		
 		ass.addImpulse(impulse.y, -impulse.x);
-		ass.addImpulse((float)(Math.random()-0.5)*ass.getWeight(), (float)(Math.random()*-0.5)*ass.getWeight());
+		ass.addImpulse(randomVel()*ass.getWeight(), randomVel()*ass.getWeight());
 		Main.instance.spawnCharacter(ass);
 		
-		
-		
+	}
+	
+	private static float randomVel() {
+		return (float) (Math.random()-0.5)*ASTEROID_VEL_RANDOM_FACTOR;
 	}
 
 }

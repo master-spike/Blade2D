@@ -29,7 +29,6 @@ public class Main extends GameCore {
 	private ArrayList<AbstractCharacter> mCharacters;
 	private AbstractCharacter player;
 	private AbstractCharacter earth;
-	private SideBar mSideBar;
 	
 	public ArrayList<AbstractEvent> immediate_events;
 
@@ -39,8 +38,8 @@ public class Main extends GameCore {
 	// CONSTS
 
 	public static final float GRAVITY_CONST = 4000;
-	public static final float ASTEROID_MIN_SPAWN_HEIGHT = 200;
-	public static final float ASTEROID_MAX_SPAWN_HEIGHT = 300;
+	public static final float ASTEROID_MIN_SPAWN_HEIGHT = 190;
+	public static final float ASTEROID_MAX_SPAWN_HEIGHT = 280;
 	public static final float ASTEROID_SPAWN_CHANCE_PER_FRAME = 0.004f;
 	public static final int ASTEROID_SPAWN_WARNING_TIME = 120;
 	public static final int ASS_RADIUS = 10;
@@ -69,7 +68,6 @@ public class Main extends GameCore {
 
 	protected void init() {
 		font = new Font("res/mc_0.png", "res/mc.fnt");
-		mSideBar = new SideBar(GameWidth, 0, SideBarWidth, GameHeight);
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
 		guielems = new ArrayList<AbstractGUIElem>();
@@ -122,7 +120,6 @@ public class Main extends GameCore {
 		for (AbstractGUIElem g : guielems) {
 			super.draw_elems.addAll(g.getShape());
 		}
-		super.draw_elems.addAll(mSideBar.getShapes());
 		
 		
 		
