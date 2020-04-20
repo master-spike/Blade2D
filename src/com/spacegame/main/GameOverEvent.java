@@ -1,6 +1,7 @@
 package com.spacegame.main;
 
 import com.spacegame.guielems.AbstractGUIElem;
+import com.spacegame.guielems.ExplodingEarth;
 import com.spacegame.guielems.GameOver;
 
 public class GameOverEvent extends AbstractEvent {
@@ -19,6 +20,8 @@ public class GameOverEvent extends AbstractEvent {
 		PlaySoundEvent end_explosion_sound = new PlaySoundEvent(4);
 		end_explosion_sound.trigger();
 		Main.instance.addGUIElem(graphic);
+		Main.instance.killEarth();
+		Main.instance.addGUIElem(new ExplodingEarth(384, 384, Main.EARTH_RADIUS));
 	}
 
 }

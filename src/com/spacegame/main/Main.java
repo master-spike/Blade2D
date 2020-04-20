@@ -15,7 +15,6 @@ import com.spacegame.characters.Earth;
 import com.spacegame.characters.Najeeb;
 import com.spacegame.guielems.AbstractGUIElem;
 import com.spacegame.guielems.AsteroidWarning;
-import com.spacegame.guielems.GameOver;
 import com.spacegame.guielems.HealthDecreaseIndicator;
 import com.spacegame.guielems.Healthbar;
 import com.spacegame.guielems.ScoreMeter;
@@ -30,7 +29,7 @@ public class Main extends GameCore {
 
 	private ArrayList<AbstractCharacter> mCharacters;
 	private AbstractCharacter player;
-	private AbstractCharacter earth;
+	private Earth earth;
 	
 	public ArrayList<AbstractEvent> immediate_events;
 
@@ -38,8 +37,6 @@ public class Main extends GameCore {
 	public ArrayList<Timer> timers;
 
 	// CONSTS
-	
-	public static final boolean TEST = true;
 
 	public static final float GRAVITY_CONST = 4000;
 	public static final float ASTEROID_MIN_SPAWN_HEIGHT = 190;
@@ -160,19 +157,23 @@ public class Main extends GameCore {
 		for (AbstractGUIElem g : guielems) {
 			super.draw_elems.addAll(g.getShape());
 		}
+		// update gui and cosmetic elems
+		for (AbstractGUIElem g : guielems) {
+			g.update();
+		}
+		for (Star s : mStars) {
+			s.update();
+		}
 		
 		// do this only if not paused
 		if (pauseStatus == UNPAUSED) {
-			// update game elements
-			for (AbstractGUIElem g : guielems) {
-				g.update();
-			}
+
+			
+			// update game elems
 			for (AbstractCharacter character : mCharacters) {
 				character.update();
 			}
-			for (Star s : mStars) {
-				s.update();
-			}
+
 
 			// Control player
 
@@ -189,9 +190,7 @@ public class Main extends GameCore {
 			
 			float spawnChance = (mNumAsteroids <= 5) ? 0.004f:0.003f;
 
-			if (Math.random() < spawnChance || (TEST && keys[GLFW.GLFW_KEY_Q])) {
-				spawnAsteroid();
-			}
+			if (Math.random() < spawnChance)
 
 			// Collisions
 
@@ -231,16 +230,6 @@ public class Main extends GameCore {
 				}
 			}
 			
-		
-			
-			// trigger all immediate (non-timed) events and clear the list (to avoid re-triggering)
-			ArrayList<AbstractEvent> cached = new ArrayList<AbstractEvent>();
-			cached.addAll(immediate_events);
-			immediate_events.clear();
-			for (AbstractEvent e : cached) {
-				e.trigger();
-			}
-
 			// gravity
 
 			for (AbstractCharacter c : mCharacters) {
@@ -259,6 +248,14 @@ public class Main extends GameCore {
 				System.out.println();
 			}
 			
+			// trigger all immediate (non-timed) events and clear the list (to avoid re-triggering)
+			ArrayList<AbstractEvent> cached = new ArrayList<AbstractEvent>();
+			cached.addAll(immediate_events);
+			immediate_events.clear();
+			for (AbstractEvent e : cached) {
+				e.trigger();
+			}
+			
 			
 		}
 		else if (pauseStatus == PAUSED) {
@@ -269,7 +266,6 @@ public class Main extends GameCore {
 			if (keys[GLFW.GLFW_KEY_SPACE] && !keysPrevious[GLFW.GLFW_KEY_SPACE]) {
 				pauseStatus = UNPAUSED;
 			}
-		} else {
 			
 		}
 
@@ -358,6 +354,10 @@ public class Main extends GameCore {
 		
 		playSound(SFIND_ALARM);
 		mNumAsteroids++;
+	}
+	public void killEarth() {
+		mCharacters.remove(earth);
+		earth = null;
 	}
 }
 

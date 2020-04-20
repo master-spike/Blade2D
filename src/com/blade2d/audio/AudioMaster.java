@@ -1,7 +1,6 @@
 package com.blade2d.audio;
 
 import org.lwjgl.openal.*;
-import org.lwjgl.system.*;
 
 import java.nio.*;
 

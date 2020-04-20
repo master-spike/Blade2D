@@ -10,8 +10,6 @@ import com.spacegame.main.AsteroidDespawnEvent;
 import com.spacegame.main.DeleteGUIElemEvent;
 import com.spacegame.main.IncreaseScoreEvent;
 import com.spacegame.main.Main;
-import com.spacegame.main.PlaySoundEvent;
-import com.spacegame.main.Timer;
 
 public class Asteroid extends AbstractCharacter {
 	

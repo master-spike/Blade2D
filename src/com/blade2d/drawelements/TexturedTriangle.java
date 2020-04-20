@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glColor4f;
 import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
 public class TexturedTriangle extends TriElem {
@@ -32,8 +33,11 @@ public class TexturedTriangle extends TriElem {
 		glColor4f(r, g, b, a);
 		tex.bind();
 		glBegin(GL_TRIANGLES);
+		glTexCoord2f(t_x1, t_y1);
 		glVertex2f(x1, y1);
+		glTexCoord2f(t_x2, t_y2);
 		glVertex2f(x2, y2);
+		glTexCoord2f(t_x3, t_y3);
 		glVertex2f(x3, y3);
 		glEnd();
 		tex.unbind();
