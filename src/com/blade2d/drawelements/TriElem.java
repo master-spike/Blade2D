@@ -5,11 +5,11 @@ import static org.lwjgl.opengl.GL11.*;
 public class TriElem extends AbstractDrawElem{
 	
 	
-	private float x1, y1, x2, y2, x3, y3;
-	private float r;
-	private float g;
-	private float b;
-	private float a;
+	protected float x1, y1, x2, y2, x3, y3;
+	protected float r;
+	protected float g;
+	protected float b;
+	protected float a;
 	
 	public float getX1() {
 		return x1;
@@ -91,9 +91,9 @@ public class TriElem extends AbstractDrawElem{
 		this.a = a;
 	}
 
-	public TriElem(float mX, float y1, float x2, float y2, float x3, float y3,  float r, float g, float b, float a, int l) {
+	public TriElem(float x1, float y1, float x2, float y2, float x3, float y3,  float r, float g, float b, float a, int l) {
 		super(l);
-		this.x1 = mX;
+		this.x1 = x1;
 		this.y1 = y1;
 		this.x2 = x2;
 		this.y2 = y2;
@@ -127,7 +127,6 @@ public class TriElem extends AbstractDrawElem{
 		
 	}
 
-	@Override
 	public void translate(Vertex c) {
 		Vertex v = Transformations.translate(new Vertex(x1, y1), c);
 		x1 = v.x;
@@ -140,7 +139,6 @@ public class TriElem extends AbstractDrawElem{
 		y3 = v.y;
 	}
 
-	@Override
 	public void scale(Vertex c, float scale) {
 		Vertex v = Transformations.scale(new Vertex(x1, y1), c, scale);
 		x1 = v.x;
@@ -154,7 +152,6 @@ public class TriElem extends AbstractDrawElem{
 		
 	}
 
-	@Override
 	public void reflect(Vertex c, double angle) {
 		Vertex v = Transformations.reflect(new Vertex(x1, y1), c, angle);
 		x1 = v.x;
