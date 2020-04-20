@@ -93,6 +93,8 @@ public class Main extends GameCore {
 
 	protected void init() {
 		
+		mNumAsteroids = 0;
+		
 		font = new Font("res/mc_0.png", "res/mc.fnt");
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
@@ -185,8 +187,7 @@ public class Main extends GameCore {
 
 			// Spawn asteroids
 			
-			float spawnChance = ASTEROID_SPAWN_CHANCE_PER_FRAME + 
-					(1-ASTEROID_SPAWN_CHANCE_PER_FRAME) * Math.max(IDEAL_ASTEROID_COUNT - countAsteroids(), 0);
+			float spawnChance = (mNumAsteroids <= 2) ? 0.05f:0.02f;
 
 			if (Math.random() < spawnChance || (TEST && keys[GLFW.GLFW_KEY_Q])) {
 				spawnAsteroid();
