@@ -50,7 +50,8 @@ public class Main extends GameCore {
 
 	public static final int SFIND_EXPLOSION_1 = 0;
 	public static final int SFIND_COLLISION_1= 1;
-	public static final int SFIND_ALARM= 2;
+	public static final int SFIND_ALARM = 2;
+	public static final int SFIND_SCORE_UP = 3;
 	
 	public int GameWidth, GameHeight, SideBarWidth;
 

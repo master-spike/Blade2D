@@ -7,6 +7,8 @@ public class SoundBank {
 	public Sound[] sounds;
 	public int[] durations;
 	
+	public int sourcePointer;
+	
 	public SoundBank(int num_sounds) {
 		sounds = new Sound[num_sounds];
 		durations = new int[num_sounds];

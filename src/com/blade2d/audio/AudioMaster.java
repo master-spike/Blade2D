@@ -17,8 +17,8 @@ public class AudioMaster {
 	ALCapabilities alCapabilities;
 	ShortBuffer rawAudioBuffer;
 
-	int[] sources = new int[256];
-	long[] times = new long[256];
+	int[] sources = new int[16];
+	long[] times = new long[16];
 
 	public void init() {
 		defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
@@ -37,16 +37,15 @@ public class AudioMaster {
 		
 		long current_time = System.currentTimeMillis();
 		int ind = -1;
-		for (int i = 0; i < 256; i++) {
+		for (int i = 0; i < 16; i++) {
 			if (times[i] < current_time) {
 				ind = i;
 				break;
 			}
 		}
 		if (ind == -1) {
-			System.out.println("too many sources, failed to play sound");
+			System.err.println("too many sources, failed to play sound");
 		}
-		
 		
 		int sourcePointer = alGenSources();
 
@@ -63,8 +62,9 @@ public class AudioMaster {
 
 	public void checkSources() {
 		long current_time = System.currentTimeMillis();
-		for (int i = 0; i < 256; i++) {
-			if(times[i] < current_time) alDeleteSources(sources[i]);
+		for (int i = 0; i < 16; i++) {
+			if (times[i] < current_time)
+				alDeleteSources(sources[i]);
 		}
 	}
 

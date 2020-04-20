@@ -91,7 +91,7 @@ public class Asteroid extends AbstractCharacter {
 			Main.instance.timers.add(ind_t);
 			Main.instance.immediate_events.add(ise);
 			Main.instance.immediate_events.add(despawn_this);
-			Main.instance.immediate_events.add(new PlaySoundEvent(3));
+			Main.instance.immediate_events.add(new PlaySoundEvent(Main.SFIND_SCORE_UP));
 		}
 		
 		// Drawing stuff
