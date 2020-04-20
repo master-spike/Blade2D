@@ -45,6 +45,7 @@ public class AudioMaster {
 		}
 		if (ind == -1) {
 			System.err.println("too many sources, failed to play sound");
+			return;
 		}
 		
 		int sourcePointer = alGenSources();

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.blade2d.drawelements.AbstractDrawElem;
 import com.spacegame.main.Main;
-import com.spacegame.main.PlaySoundEvent;
 import com.spacegame.physics.Vector2f;
 
 public abstract class AbstractCharacter {
