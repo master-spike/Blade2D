@@ -13,6 +13,7 @@ public class AsteroidDespawnEvent extends AbstractEvent {
 	public void trigger() {
 		
 		Main.instance.despawnCharacter(asteroid);
+		Main.instance.mNumAsteroids--;
 		
 	}
 
