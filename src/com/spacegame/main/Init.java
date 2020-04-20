@@ -41,6 +41,7 @@ public class Init {
 		soundbank.load(Main.SFIND_COLLISION_1, "res/Collision_1.ogg", 300);
 		soundbank.load(Main.SFIND_ALARM, "res/Alarm.ogg", 1900);
 		soundbank.load(Main.SFIND_SCORE_UP, "res/Score_up.ogg", 1000);
+		soundbank.load(Main.SFIND_EXPLOSION_2, "res/Explosion_2.ogg", 3000);
 	}
 
 }

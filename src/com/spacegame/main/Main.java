@@ -51,10 +51,13 @@ public class Main extends GameCore {
 	public static final int NUM_STARS = 200;
 	public static final int MAX_HP = 1000;
 
+	
+	// Soundbank index constants
 	public static final int SFIND_EXPLOSION_1 = 0;
 	public static final int SFIND_COLLISION_1= 1;
 	public static final int SFIND_ALARM = 2;
 	public static final int SFIND_SCORE_UP = 3;
+	public static final int SFIND_EXPLOSION_2 = 4;
 	
 	public int GameWidth, GameHeight, SideBarWidth;
 
@@ -72,6 +75,7 @@ public class Main extends GameCore {
 	public static final int ENDED = 2;
 	public static final int RESTARTED = 3;
 	public static final int SHUTDOWN = 2;
+
 	
 	ArrayList<AbstractDrawElem> pausemenu;
 	

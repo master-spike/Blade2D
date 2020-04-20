@@ -16,6 +16,8 @@ public class GameOverEvent extends AbstractEvent {
 		Main.instance.pauseStatus = Main.ENDED;
 		
 		AbstractGUIElem graphic = new GameOver(mScore);
+		PlaySoundEvent end_explosion_sound = new PlaySoundEvent(4);
+		end_explosion_sound.trigger();
 		Main.instance.addGUIElem(graphic);
 	}
 
