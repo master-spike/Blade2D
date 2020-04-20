@@ -17,6 +17,9 @@ public class AsteroidExplodeEvent extends AbstractEvent {
 		AsteroidDespawnEvent despawn_event = new AsteroidDespawnEvent(ass);
 		despawn_event.trigger();
 		
+		PlaySoundEvent pse = new PlaySoundEvent(Main.SFIND_EXPLOSION_1);
+		pse.trigger();
+		
 	}
 
 }

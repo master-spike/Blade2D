@@ -156,6 +156,7 @@ public abstract class AbstractCharacter {
 	
 	public float getWeight() {return mWeight;}
 	public Vector2f getVelocity() {return new Vector2f(mMomentumX / mWeight, mMomentumY / mWeight);}
+	public Vector2f getMomentum() {return new Vector2f(mMomentumX, mMomentumY);}
 	public Vector2f getPosition() {return new Vector2f(mX, mY);}
 
 	public float getSize() {

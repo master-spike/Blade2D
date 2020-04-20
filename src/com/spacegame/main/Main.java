@@ -74,21 +74,8 @@ public class Main extends GameCore {
 		super(w, h, t, r);
 		instance = this;
 	}
-	
-	private void loadSounds() {
-		audio = new AudioMaster();
-		audio.init();
-		soundbank = new SoundBank(20);
-		
-		soundbank.load(0, "res/Explosion_1.ogg", 1000);
-		soundbank.load(1, "res/Collision_1.ogg", 300);
-		soundbank.load(2, "res/Alarm.ogg", 1900);
-		soundbank.load(3, "res/Score_up.ogg", 1000);
-	}
 
 	protected void init() {
-
-		loadSounds();
 		
 		font = new Font("res/mc_0.png", "res/mc.fnt");
 		mCharacters = new ArrayList<AbstractCharacter>();
@@ -120,6 +107,7 @@ public class Main extends GameCore {
 		earth = new Earth(GameWidth / 2, GameHeight / 2, EARTH_RADIUS);
 		mCharacters.add(earth);
 		
+		// start the player at an orbital velocity
 		Vector2f spawnDir = Vector2f.subtract(earth.getPosition(), player.getPosition());
 		Vector2f impulse = Vector2f.scale(player.getGravityForce(Main.instance.getEarthPos().x, Main.instance.getEarthPos().y), 
 											Vector2f.magnitude(spawnDir) * player.getWeight());
@@ -223,15 +211,13 @@ public class Main extends GameCore {
 			for (AbstractCharacter c : mCharacters) {
 				if (c.getClass() == Asteroid.class && c.hasCollided(earth)) {
 					immediate_events.add(new AsteroidExplodeEvent((Asteroid) c));
-					int r = (int) (Vector2f.magnitude(c.getVelocity()) * c.getWeight());
+					int r = (int) (Vector2f.magnitude(c.getMomentum()));
 					immediate_events.add(new ReduceHPEvent(r));
 					HealthDecreaseIndicator hdind =  new HealthDecreaseIndicator(c.getPosition().x, c.getPosition().y, r);
 					guielems.add(hdind);
 					Timer hdind_timer = new Timer(HealthDecreaseIndicator.DURATION);
 					hdind_timer.addEvent(new DeleteGUIElemEvent(hdind));
 					hdind_timer.start();
-					PlaySoundEvent pse = new PlaySoundEvent(SFIND_EXPLOSION_1);
-					immediate_events.add(pse);
 				}
 			}
 			
