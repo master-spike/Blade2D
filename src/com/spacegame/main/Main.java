@@ -60,7 +60,7 @@ public class Main extends GameCore {
 	public static final int SFIND_SCORE_UP = 3;
 	public static final int SFIND_EXPLOSION_2 = 4;
 	
-	public int GameWidth, GameHeight, SideBarWidth;
+	public int GameWidth, GameHeight;
 	
 	public int mNumAsteroids;
 

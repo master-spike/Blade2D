@@ -7,12 +7,10 @@ public class Init {
 	public static void main(String[] args) {
 		
 		final int WIDTH = 768, HEIGHT = 768;
-		final int SIDEBARWIDTH = WIDTH - HEIGHT;
 		
-		Main game = new Main(WIDTH, HEIGHT, "Space Game", 60);
-		game.GameWidth = WIDTH - SIDEBARWIDTH;
+		Main game = new Main(WIDTH, HEIGHT, "Asteroid Redirect Project", 60);
+		game.GameWidth = WIDTH;
 		game.GameHeight = HEIGHT;
-		game.SideBarWidth = SIDEBARWIDTH;
 		
 		loadSounds();
 		game.audio = audio;

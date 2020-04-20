@@ -12,7 +12,7 @@ public class Earth extends AbstractCharacter {
 		
 		mWeight = Float.POSITIVE_INFINITY;
 		
-		tex = new Texture("earth.png");
+		tex = new Texture("res/earth.png");
 	}
 	
 	public void update() {
