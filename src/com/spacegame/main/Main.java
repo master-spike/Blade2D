@@ -16,6 +16,7 @@ import com.spacegame.guielems.AbstractGUIElem;
 import com.spacegame.guielems.AsteroidWarning;
 import com.spacegame.guielems.HealthDecreaseIndicator;
 import com.spacegame.guielems.Healthbar;
+import com.spacegame.guielems.ScoreMeter;
 import com.spacegame.physics.CollidableCircleModel;
 import com.spacegame.physics.PhysicsCalc;
 import com.spacegame.physics.Vect2fPair;
@@ -29,6 +30,8 @@ public class Main extends GameCore {
 	private AbstractCharacter player;
 	private AbstractCharacter earth;
 	private SideBar mSideBar;
+	
+	public ArrayList<AbstractEvent> immediate_events;
 
 	public ArrayList<AbstractGUIElem> guielems;
 	public ArrayList<Timer> timers;
@@ -43,7 +46,7 @@ public class Main extends GameCore {
 	public static final int ASS_RADIUS = 10;
 	public static final int EARTH_RADIUS = 70;
 	public static final int NUM_STARS = 200;
-	public static final int MAX_HP = 300;
+	public static final int MAX_HP = 1000;
 
 	public int GameWidth, GameHeight, SideBarWidth;
 
@@ -52,6 +55,8 @@ public class Main extends GameCore {
 	public Font font;
 
 	public int hp;
+	
+	private int score;
 
 	private boolean paused;
 	
@@ -68,9 +73,11 @@ public class Main extends GameCore {
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
 		guielems = new ArrayList<AbstractGUIElem>();
+		immediate_events = new ArrayList<AbstractEvent>();
 		timers = new ArrayList<Timer>();
 		hp = MAX_HP;
 		paused = false;
+		score = 0;
 		keysPrevious = new boolean[window.input.getKeys().length];
 		
 		pausemenu = new ArrayList<AbstractDrawElem>();
@@ -86,7 +93,8 @@ public class Main extends GameCore {
 			mStars.add(new Star((int) (Math.random() * GameWidth), (int) (Math.random() * GameHeight)));
 		}
 
-		guielems.add(new Healthbar(200, 40, 800, 600, 2, 0.5f, 0.5f, 0.5f, 0f, 0f, 0f, MAX_HP / 3, (2 * MAX_HP) / 3));
+		guielems.add(new Healthbar(100, 10, 334, 300, 1, 0f, 0f, 0f, 0f, 0f, 0f, MAX_HP / 3, (2 * MAX_HP) / 3));
+		guielems.add(new ScoreMeter());
 
 		earth = new Earth(GameWidth / 2, GameHeight / 2, EARTH_RADIUS);
 		mCharacters.add(earth);
@@ -176,13 +184,11 @@ public class Main extends GameCore {
 
 			// explode asteroids colliding into Earth, and reduce hp by energy
 			// of impact
-			ArrayList<AbstractEvent> earth_collision_events = new ArrayList<AbstractEvent>();
 			for (AbstractCharacter c : mCharacters) {
 				if (c.getClass() == Asteroid.class && c.hasCollided(earth)) {
-					earth_collision_events.add(new AsteroidExplodeEvent((Asteroid) c));
+					immediate_events.add(new AsteroidExplodeEvent((Asteroid) c));
 					int r = (int) (Vector2f.magnitude(c.getVelocity()) * c.getWeight());
-					earth_collision_events
-							.add(new ReduceHPEvent(r));
+					immediate_events.add(new ReduceHPEvent(r));
 					HealthDecreaseIndicator hdind =  new HealthDecreaseIndicator(c.getPosition().x, c.getPosition().y, r);
 					guielems.add(hdind);
 					Timer hdind_timer = new Timer(HealthDecreaseIndicator.DURATION);
@@ -190,14 +196,19 @@ public class Main extends GameCore {
 					hdind_timer.start();
 				}
 			}
-			for (AbstractEvent e : earth_collision_events) {
+			
+		
+			
+			// trigger all immediate (non-timed) events and clear the list (to avoid re-triggering)
+			for (AbstractEvent e : immediate_events) {
 				e.trigger();
 			}
+			immediate_events.clear();
 
 			// gravity
 
 			for (AbstractCharacter c : mCharacters) {
-				if (!c.equals(earth))
+				if (!c.equals(earth) && c.getDistanceTo(earth) > earth.getSize())
 					c.applyGravity(earth.getPosition().x, earth.getPosition().y);
 			}
 
@@ -249,6 +260,13 @@ public class Main extends GameCore {
 
 	public void despawnCharacter(AbstractCharacter c) {
 		mCharacters.remove(c);
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	public void increaseScore(int amount) {
+		score += amount;
 	}
 }
 

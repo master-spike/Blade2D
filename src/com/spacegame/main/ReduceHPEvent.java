@@ -8,10 +8,9 @@ public class ReduceHPEvent  extends AbstractEvent {
 		this.r = r;
 	}
 	
-	void trigger() {
+	public void trigger() {
 		Main.instance.hp -= r;
 		if (Main.instance.hp < 0) Main.instance.hp = 0;
-		System.out.println(r);
 	}
 	
 	

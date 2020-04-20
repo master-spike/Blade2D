@@ -9,7 +9,7 @@ public class DeleteGUIElemEvent  extends AbstractEvent {
 	public DeleteGUIElemEvent(AbstractGUIElem g) {
 		guielem = g;
 	}
-	void trigger() {
+	public void trigger() {
 		
 		Main.instance.guielems.remove(guielem);
 		

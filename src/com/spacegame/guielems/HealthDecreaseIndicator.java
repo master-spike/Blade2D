@@ -6,7 +6,7 @@ public class HealthDecreaseIndicator extends AbstractGUIElem {
 
 	
 	public static final int DURATION = 120;
-	private static final float SPEED = 0.1f;
+	private static final float SPEED = 0.2f;
 	
 	private float x, y;
 	private int r;
@@ -19,7 +19,7 @@ public class HealthDecreaseIndicator extends AbstractGUIElem {
 	
 	public void update() {
 		drawelems.clear();
-		drawelems.addAll(Main.instance.font.getString(("-" + r), x, y, 0.7f, 1.0f, 0.0f, 0.0f, a, 10000));
+		drawelems.addAll(Main.instance.font.getString(("-" + r), x, y, 1f, 1.0f, 0.0f, 0.0f, a, 10000));
 		y += SPEED;
 		a -= 1.0f/DURATION;
 	}

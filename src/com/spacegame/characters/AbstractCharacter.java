@@ -144,10 +144,19 @@ public abstract class AbstractCharacter {
 		return Vector2f.scale(grav, mWeight);
 	}
 	
+	public float getDistanceTo(AbstractCharacter c) {
+		
+		return Vector2f.magnitude(Vector2f.add(getPosition(), Vector2f.scale(c.getPosition(), -1f)));
+	}
+	
 	public void onCollide() {};
 	
 	public float getWeight() {return mWeight;}
 	public Vector2f getVelocity() {return new Vector2f(mMomentumX / mWeight, mMomentumY / mWeight);}
 	public Vector2f getPosition() {return new Vector2f(mX, mY);}
+
+	public float getSize() {
+		return mSize;
+	}
 
 }

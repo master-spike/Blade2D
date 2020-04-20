@@ -11,7 +11,7 @@ public class AsteroidExplodeEvent extends AbstractEvent {
 		this.ass = ass;
 	}
 
-	void trigger() {
+	public void trigger() {
 
 		Main.instance.guielems.add(new ExplodingAsteriod((int)ass.getPosition().x,(int)ass.getPosition().y,ass.getmVertices()));
 		AsteroidDespawnEvent despawn_event = new AsteroidDespawnEvent(ass);

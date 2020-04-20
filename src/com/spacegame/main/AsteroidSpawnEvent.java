@@ -11,7 +11,7 @@ public class AsteroidSpawnEvent extends AbstractEvent {
 		this.position = p;
 	}
 
-	void trigger() {
+	public void trigger() {
 		
 		Asteroid ass = new Asteroid((int)position.x, (int)position.y, Main.ASS_RADIUS, Main.instance.GameWidth / 2, Main.instance.GameHeight / 2);
 		ass.addSpin((float) (Math.random() / 3) * (Math.random() < 0.5 ? 1 : -1));
@@ -22,6 +22,7 @@ public class AsteroidSpawnEvent extends AbstractEvent {
 		impulse = Vector2f.scale(Vector2f.normalise(impulse), (float) Math.sqrt(Vector2f.magnitude(impulse)));
 		
 		ass.addImpulse(impulse.y, -impulse.x);
+		ass.addImpulse((float)(Math.random()-0.5)*ass.getWeight(), (float)(Math.random()*-0.5)*ass.getWeight());
 		Main.instance.spawnCharacter(ass);
 		
 		

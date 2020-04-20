@@ -5,8 +5,13 @@ import java.util.ArrayList;
 import com.blade2d.drawelements.AbstractDrawElem;
 import com.blade2d.drawelements.TriElem;
 import com.blade2d.drawelements.Vertex;
+import com.spacegame.main.AsteroidDespawnEvent;
+import com.spacegame.main.IncreaseScoreEvent;
+import com.spacegame.main.Main;
 
 public class Asteroid extends AbstractCharacter {
+	
+	public static final float ASTEROID_DENSITY = 0.2f;
 	
 	protected ArrayList<Vertex> mVertices;
 	public ArrayList<Vertex> getmVertices() {
@@ -19,7 +24,7 @@ public class Asteroid extends AbstractCharacter {
 	
 	public Asteroid (int x, int y, int size, int aimX, int aimY) {
 		super(x, y, size);
-		mWeight = 100;
+		mWeight = size*size*ASTEROID_DENSITY;
 		mEngineImpulse = 1f;
 		
 		mAimX = aimX; mAimY = aimY;
@@ -57,8 +62,11 @@ public class Asteroid extends AbstractCharacter {
 		centre.y = mY;
 		
 		if (Math.abs(mAimX - mX) > mAimX || Math.abs(mAimY - mY) > mAimY) {
-			mX = Float.POSITIVE_INFINITY;
-			mY = Float.POSITIVE_INFINITY;
+			AsteroidDespawnEvent despawn_this = new AsteroidDespawnEvent(this);
+			IncreaseScoreEvent ise = new IncreaseScoreEvent(1);
+			
+			Main.instance.immediate_events.add(ise);
+			Main.instance.immediate_events.add(despawn_this);
 		}
 		
 		// Drawing stuff

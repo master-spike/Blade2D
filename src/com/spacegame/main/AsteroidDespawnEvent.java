@@ -10,7 +10,7 @@ public class AsteroidDespawnEvent extends AbstractEvent {
 		this.asteroid = asteroid;
 	}
 	
-	void trigger() {
+	public void trigger() {
 		
 		Main.instance.despawnCharacter(asteroid);
 		
