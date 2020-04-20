@@ -7,9 +7,6 @@ import java.nio.*;
 
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
-import static org.lwjgl.stb.STBVorbis.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.libc.LibCStdlib.*;
 
 public class AudioMaster {
 	String defaultDeviceName;
@@ -29,11 +26,24 @@ public class AudioMaster {
 
 		alcCapabilities = ALC.createCapabilities(device);
 		alCapabilities = AL.createCapabilities(alcCapabilities);
+		
 
 	}
 	
-	public void playSound() {
+	public void play(Sound sound) {
+		int sourcePointer = alGenSources();
+
+		//Assign the sound we just loaded to the source
+		alSourcei(sourcePointer, AL_BUFFER, sound.bufferPointer);
 		
+
+		//Play the sound
+		alSourcePlay(sourcePointer);
+	}
+	
+	public void destroy() {
+		alcDestroyContext(context);
+		alcCloseDevice(device);
 	}
 
 }

@@ -2,8 +2,8 @@ package com.spacegame.guielems;
 
 import java.util.ArrayList;
 
-import com.blade2d.drawelements.TriElem;
-import com.blade2d.drawelements.Vertex;
+import com.blade2d.audio.Sound;
+import com.blade2d.drawelements.*;
 import com.spacegame.main.AbstractEvent;
 import com.spacegame.main.DeleteGUIElemEvent;
 import com.spacegame.main.Timer;

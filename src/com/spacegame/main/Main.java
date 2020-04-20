@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.blade2d.audio.AudioMaster;
 import com.blade2d.drawelements.AbstractDrawElem;
 import com.blade2d.drawelements.Font;
 import com.blade2d.drawelements.QuadElem;
@@ -47,6 +48,8 @@ public class Main extends GameCore {
 	public static final int NUM_STARS = 200;
 	public static final int MAX_HP = 1000;
 
+	public static final int SFIND_EXPLOSION_1 = 0;
+	
 	public int GameWidth, GameHeight, SideBarWidth;
 
 	private ArrayList<Star> mStars;
@@ -60,13 +63,28 @@ public class Main extends GameCore {
 	private boolean paused;
 	
 	ArrayList<AbstractDrawElem> pausemenu;
+	
+	public AudioMaster audio;
+
+	public SoundBank soundbank;
 
 	public Main(int w, int h, String t, int r) {
 		super(w, h, t, r);
 		instance = this;
 	}
+	
+	private void loadSounds() {
+		audio = new AudioMaster();
+		audio.init();
+		soundbank = new SoundBank(20);
+		
+		soundbank.load(0, "res/explosion_1.ogg");
+	}
 
 	protected void init() {
+
+		loadSounds();
+		
 		font = new Font("res/mc_0.png", "res/mc.fnt");
 		mCharacters = new ArrayList<AbstractCharacter>();
 		mStars = new ArrayList<Star>();
@@ -191,6 +209,8 @@ public class Main extends GameCore {
 					Timer hdind_timer = new Timer(HealthDecreaseIndicator.DURATION);
 					hdind_timer.addEvent(new DeleteGUIElemEvent(hdind));
 					hdind_timer.start();
+					PlaySoundEvent pse = new PlaySoundEvent(SFIND_EXPLOSION_1);
+					immediate_events.add(pse);
 				}
 			}
 			

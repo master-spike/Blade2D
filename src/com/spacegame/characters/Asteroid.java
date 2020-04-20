@@ -11,7 +11,7 @@ import com.spacegame.main.Main;
 
 public class Asteroid extends AbstractCharacter {
 	
-	public static final float ASTEROID_DENSITY = 0.2f;
+	public static final float ASTEROID_DENSITY = 0.15f;
 	
 	protected ArrayList<Vertex> mVertices;
 	public ArrayList<Vertex> getmVertices() {
